@@ -138,6 +138,8 @@ function extractWhatsAppMessage(payload) {
     text: deepFindString(payload, ["text", "message", "body", "content", "caption", "conversation"]) || "",
     from: deepFindString(payload, ["from", "number", "phone", "sender", "remoteJid", "participant"]) || null,
     chat: deepFindString(payload, ["remoteJid", "chatId", "chat_id", "jid", "groupJid", "groupjid"]) || null,
+    mediaUrl: deepFindString(payload, ["mediaUrl", "media_url", "downloadUrl", "download_url", "audioUrl", "audio_url", "url"]) || null,
+    mimeType: deepFindString(payload, ["mimeType", "mimetype", "mime_type", "mediaType", "media_type", "type"]) || null,
     fromMe: deepFindBoolean(payload, ["fromMe", "from_me", "isFromMe", "is_from_me", "from_me_boolean"]) === true,
   };
 }
@@ -146,6 +148,58 @@ function whatsappReplyTarget(incoming, env = process.env) {
   if (incoming.chat && incoming.chat.includes("@g.us")) return incoming.chat;
   if (incoming.from && incoming.from.includes("@g.us")) return incoming.from;
   return env.GERENTE_WHATSAPP_GROUP_JID || incoming.chat || incoming.from || env.WHATSAPP_NOTIFY_TO;
+}
+
+function normalizeGerenteCommand(text = "") {
+  const value = String(text || "").trim();
+  const normalized = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+  if (normalized.startsWith("/gerente")) return value;
+  if (normalized === "gerente") return "/gerente ajuda";
+  if (normalized.startsWith("gerente ")) return `/gerente ${value.slice(value.indexOf(" ") + 1).trim()}`;
+  if (normalized.startsWith("barra gerente ")) return `/gerente ${value.split(/\s+/).slice(2).join(" ").trim()}`;
+  return value;
+}
+
+function isAudioMessage(incoming) {
+  const mime = String(incoming.mimeType || "").toLowerCase();
+  const url = String(incoming.mediaUrl || "").toLowerCase();
+  return mime.startsWith("audio/") || /\.(ogg|oga|mp3|m4a|wav|webm)(\?|$)/i.test(url);
+}
+
+async function transcribeAudio(incoming, env = process.env) {
+  if (!env.OPENAI_API_KEY || !incoming.mediaUrl || !isAudioMessage(incoming)) return null;
+
+  const mediaResponse = await fetch(incoming.mediaUrl, {
+    headers: {
+      token: env.WHATSAPP_GO_INSTANCE_TOKEN || env.UAZAPI_INSTANCE_TOKEN || "",
+    },
+  });
+  if (!mediaResponse.ok) throw new Error(`audio_download_failed_${mediaResponse.status}`);
+
+  const contentType = mediaResponse.headers.get("content-type") || incoming.mimeType || "audio/ogg";
+  const extension = contentType.includes("mpeg") ? "mp3"
+    : contentType.includes("mp4") ? "m4a"
+      : contentType.includes("wav") ? "wav"
+        : contentType.includes("webm") ? "webm"
+          : "ogg";
+  const audioFile = new File([await mediaResponse.arrayBuffer()], `whatsapp-audio.${extension}`, { type: contentType });
+  const form = new FormData();
+  form.append("model", env.GERENTE_TRANSCRIBE_MODEL || "whisper-1");
+  form.append("file", audioFile);
+
+  const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
+    },
+    body: form,
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(`audio_transcription_failed_${response.status}`);
+  return String(data.text || "").trim() || null;
 }
 
 async function whatsappInbound(req, res) {
@@ -159,7 +213,11 @@ async function whatsappInbound(req, res) {
     const raw = await readRequestBody(req);
     const payload = raw ? JSON.parse(raw) : {};
     const incoming = extractWhatsAppMessage(payload);
-    const text = String(incoming.text || "").trim();
+    let text = String(incoming.text || "").trim();
+    if (!text && isAudioMessage(incoming)) {
+      text = await transcribeAudio(incoming, process.env) || "";
+    }
+    text = normalizeGerenteCommand(text);
     const commandText = text.toLowerCase();
 
     if (incoming.fromMe || !text || !commandText.startsWith("/gerente")) {
