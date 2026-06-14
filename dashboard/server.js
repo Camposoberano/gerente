@@ -134,12 +134,16 @@ function deepFindBoolean(value, keys) {
 }
 
 function extractWhatsAppMessage(payload) {
+  const message = payload?.message && typeof payload.message === "object" ? payload.message : {};
+  const content = message?.content && typeof message.content === "object" ? message.content : {};
   return {
-    text: deepFindString(payload, ["text", "message", "body", "content", "caption", "conversation"]) || "",
-    from: deepFindString(payload, ["from", "number", "phone", "sender", "remoteJid", "participant"]) || null,
-    chat: deepFindString(payload, ["remoteJid", "chatId", "chat_id", "jid", "groupJid", "groupjid"]) || null,
-    mediaUrl: deepFindString(payload, ["mediaUrl", "media_url", "downloadUrl", "download_url", "audioUrl", "audio_url", "url"]) || null,
-    mimeType: deepFindString(payload, ["mimeType", "mimetype", "mime_type", "mediaType", "media_type", "type"]) || null,
+    text: message.text || content.text || deepFindString(payload, ["text", "body", "caption", "conversation"]) || "",
+    from: message.sender || deepFindString(payload, ["from", "number", "phone", "sender", "remoteJid", "participant"]) || null,
+    chat: message.chatid || payload?.chat?.wa_chatid || deepFindString(payload, ["remoteJid", "chatId", "chat_id", "jid", "groupJid", "groupjid"]) || null,
+    mediaUrl: content.URL || content.url || content.mediaUrl || deepFindString(payload, ["mediaUrl", "media_url", "downloadUrl", "download_url", "audioUrl", "audio_url", "URL", "url"]) || null,
+    mimeType: content.mimetype || content.mimeType || deepFindString(payload, ["mimetype", "mimeType", "mime_type"]) || null,
+    messageType: message.messageType || deepFindString(payload, ["messageType", "message_type"]) || null,
+    mediaType: message.mediaType || deepFindString(payload, ["mediaType", "media_type"]) || null,
     fromMe: deepFindBoolean(payload, ["fromMe", "from_me", "isFromMe", "is_from_me", "from_me_boolean"]) === true,
   };
 }
@@ -166,7 +170,13 @@ function normalizeGerenteCommand(text = "") {
 function isAudioMessage(incoming) {
   const mime = String(incoming.mimeType || "").toLowerCase();
   const url = String(incoming.mediaUrl || "").toLowerCase();
-  return mime.startsWith("audio/") || /\.(ogg|oga|mp3|m4a|wav|webm)(\?|$)/i.test(url);
+  const messageType = String(incoming.messageType || "").toLowerCase();
+  const mediaType = String(incoming.mediaType || "").toLowerCase();
+  return mime.startsWith("audio/")
+    || messageType.includes("audio")
+    || mediaType === "ptt"
+    || mediaType === "audio"
+    || /\.(ogg|oga|mp3|m4a|wav|webm)(\?|$)/i.test(url);
 }
 
 async function transcribeAudio(incoming, env = process.env) {
@@ -214,8 +224,14 @@ async function whatsappInbound(req, res) {
     const payload = raw ? JSON.parse(raw) : {};
     const incoming = extractWhatsAppMessage(payload);
     let text = String(incoming.text || "").trim();
-    if (!text && isAudioMessage(incoming)) {
-      text = await transcribeAudio(incoming, process.env) || "";
+    let transcriptionError = null;
+    const audioDetected = isAudioMessage(incoming);
+    if (!text && audioDetected) {
+      try {
+        text = await transcribeAudio(incoming, process.env) || "";
+      } catch (error) {
+        transcriptionError = error.message;
+      }
     }
     text = normalizeGerenteCommand(text);
     const commandText = text.toLowerCase();
@@ -227,15 +243,18 @@ async function whatsappInbound(req, res) {
         channel: "whatsapp_go",
         from: incoming.from,
         message: text.slice(0, 200),
-        reason: !text ? "empty" : "not_gerente_command",
+        reason: transcriptionError || (!text ? "empty" : "not_gerente_command"),
         from_me: incoming.fromMe,
-        audio_detected: isAudioMessage(incoming),
+        audio_detected: audioDetected,
+        mime_type: incoming.mimeType,
+        message_type: incoming.messageType,
+        media_type: incoming.mediaType,
       });
 
       return json(res, {
         ok: true,
         ignored: true,
-        reason: !text ? "empty" : "not_gerente_command",
+        reason: transcriptionError || (!text ? "empty" : "not_gerente_command"),
       });
     }
 
@@ -253,7 +272,7 @@ async function whatsappInbound(req, res) {
       result_kind: result.kind,
       task_id: result.plan?.task_id || null,
       from_me: incoming.fromMe,
-      audio_detected: isAudioMessage(incoming),
+      audio_detected: audioDetected,
     });
 
     let delivery = { ok: false, skipped: true, reason: "whatsapp_go_not_configured" };
