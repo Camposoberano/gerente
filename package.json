@@ -25,6 +25,8 @@
     "test:mcp": "node scripts/mcp-gerente.test.js",
     "test:gerente": "node scripts/gerente-command.test.js",
     "test:whatsapp-command": "node scripts/whatsapp-command.test.js",
+    "test:conversation-store": "node scripts/conversation-store.test.js",
+    "test:conversation-trace": "node scripts/conversation-trace.test.js",
     "test:router": "node scripts/router-v2.test.js",
     "sentry:review": "powershell -ExecutionPolicy Bypass -File .\\scripts\\review-sentry.ps1"
   },

@@ -7,6 +7,8 @@ import { readNotifications } from "../notifications/store.js";
 import { recordNotification } from "../notifications/store.js";
 import { sendWhatsAppGoMessage, whatsappGoConfigured } from "../notifications/whatsapp-go.js";
 import { handleGerenteCommandSmart } from "../gerente/command.js";
+import { buildConversationTrace } from "../gerente/conversation-trace.js";
+import { checkConversationStoreHealth, readWhatsAppConversations, recordWhatsAppConversation, supabaseConversationConfigured } from "./conversation-store.js";
 import { normalizeGerenteCommand } from "./whatsapp-command.js";
 
 const PORT = Number(process.env.GERENTE_DASHBOARD_PORT || 8787);
@@ -58,32 +60,38 @@ function latestOutputs(limit = 12) {
     .slice(0, limit);
 }
 
-function latestWhatsAppConversations(notifications, limit = 20) {
-  return notifications
-    .filter((item) => item.channel === "whatsapp_go" && item.type === "whatsapp_inbound")
-    .slice(-limit)
-    .reverse()
-    .map((item) => ({
-      id: item.id,
-      created_at: item.created_at,
-      from: item.from || null,
-      original_message: item.original_message || item.message || "",
-      normalized_message: item.message || "",
-      response_preview: item.response_preview || "",
-      result_kind: item.result_kind || null,
-      task_id: item.task_id || null,
-      audio_detected: Boolean(item.audio_detected),
-      transcribed: Boolean(item.transcribed),
-      transcription_error: item.transcription_error || null,
-    }));
+function providerHealth(env = process.env) {
+  return [
+    { id: "whatsapp", label: "WhatsApp/Uazapi", configured: whatsappGoConfigured(env), ok: whatsappGoConfigured(env), detail: whatsappGoConfigured(env) ? "env configurado" : "env ausente" },
+    { id: "supabase", label: "Supabase historico", configured: supabaseConversationConfigured(env), ok: supabaseConversationConfigured(env), detail: supabaseConversationConfigured(env) ? "env configurado" : "env ausente" },
+    { id: "gemini", label: "Gemini conversa", configured: Boolean(env.GEMINI_API_KEY || env.GOOGLE_API_KEY), ok: Boolean(env.GEMINI_API_KEY || env.GOOGLE_API_KEY), detail: (env.GEMINI_API_KEY || env.GOOGLE_API_KEY) ? "token configurado" : "token ausente" },
+    { id: "openai", label: "OpenAI transcricao", configured: Boolean(env.OPENAI_API_KEY), ok: Boolean(env.OPENAI_API_KEY), detail: env.OPENAI_API_KEY ? "token configurado" : "token ausente" },
+    { id: "openrouter", label: "OpenRouter modelos", configured: Boolean(env.OPENROUTER_API_KEY), ok: Boolean(env.OPENROUTER_API_KEY), detail: env.OPENROUTER_API_KEY ? "token configurado" : "token ausente" },
+    { id: "groq", label: "Groq rapido", configured: Boolean(env.GROQ_API_KEY), ok: Boolean(env.GROQ_API_KEY), detail: env.GROQ_API_KEY ? "token configurado" : "token ausente" },
+    { id: "xai", label: "xAI/Grok", configured: Boolean(env.XAI_API_KEY || env.GROK_API_KEY), ok: Boolean(env.XAI_API_KEY || env.GROK_API_KEY), detail: (env.XAI_API_KEY || env.GROK_API_KEY) ? "token configurado" : "token ausente" },
+  ];
 }
 
-function summary() {
+function latestError(notifications, conversations) {
+  const notificationError = notifications.find((item) => item.reason || item.transcription_error);
+  const conversationError = conversations.find((item) => item.transcription_error);
+  if (conversationError) return conversationError.transcription_error;
+  if (notificationError) return notificationError.transcription_error || notificationError.reason;
+  return null;
+}
+
+async function summary() {
   const arenaRuns = readArenaRuns();
   const ranking = buildArenaRanking();
   const allNotifications = readNotifications();
   const notifications = allNotifications.slice(-20).reverse();
-  const whatsappConversations = latestWhatsAppConversations(allNotifications);
+  const conversationResult = await readWhatsAppConversations({
+    limit: 20,
+    fallbackNotifications: allNotifications,
+    env: process.env,
+  });
+  const whatsappConversations = conversationResult.items;
+  const storeHealth = await checkConversationStoreHealth(process.env);
   const lastRun = arenaRuns.at(-1) || null;
 
   return {
@@ -93,6 +101,16 @@ function summary() {
       notifications: allNotifications.length,
       outputs: latestOutputs(1000).length,
       whatsapp_conversations: whatsappConversations.length,
+    },
+    health: {
+      generated_at: new Date().toISOString(),
+      providers: providerHealth(process.env).map((item) => item.id === "supabase" ? { ...item, ...storeHealth } : item),
+      conversation_store: storeHealth,
+      conversation_source: conversationResult.source,
+      conversation_error: conversationResult.error,
+      last_error: latestError(notifications, whatsappConversations),
+      last_audio: whatsappConversations.find((item) => item.audio_detected) || null,
+      last_deploy_hint: process.env.COOLIFY_RESOURCE_UUID || process.env.HOSTNAME || null,
     },
     last_run: lastRun,
     ranking,
@@ -311,22 +329,46 @@ async function whatsappInbound(req, res) {
       requestedBy: incoming.from ? `whatsapp:${incoming.from}` : "whatsapp",
       env: process.env,
     });
+    const trace = buildConversationTrace(result);
+    const responsePreview = String(result.message || "").slice(0, 500);
 
-    recordNotification({
+    const notificationRecord = recordNotification({
       type: "whatsapp_inbound",
       title: "Mensagem recebida via WhatsApp",
       channel: "whatsapp_go",
       from: incoming.from,
+      chat_id: incoming.chat,
       message: text,
       original_message: originalText || null,
-      response_preview: String(result.message || "").slice(0, 500),
+      response_preview: responsePreview,
       result_kind: result.kind,
       task_id: result.plan?.task_id || null,
+      ...trace,
       from_me: incoming.fromMe,
       audio_detected: audioDetected,
       transcribed: audioDetected && Boolean(text),
       transcription_error: transcriptionError,
     });
+    const conversationDelivery = await recordWhatsAppConversation({
+      from: incoming.from,
+      chat_id: incoming.chat,
+      original_message: originalText || text,
+      normalized_message: text,
+      response_preview: responsePreview,
+      result_kind: result.kind,
+      task_id: result.plan?.task_id || null,
+      ...trace,
+      audio_detected: audioDetected,
+      transcribed: audioDetected && Boolean(text),
+      transcription_error: transcriptionError,
+      metadata: {
+        notification_id: notificationRecord.id,
+        received_text: Boolean(incoming.text),
+        mime_type: incoming.mimeType,
+        message_type: incoming.messageType,
+        media_type: incoming.mediaType,
+      },
+    }, process.env);
 
     let delivery = { ok: false, skipped: true, reason: "whatsapp_go_not_configured" };
     const replyTarget = whatsappReplyTarget(incoming, process.env);
@@ -346,6 +388,12 @@ async function whatsappInbound(req, res) {
         skipped: delivery.skipped,
         status: delivery.status,
         reason: delivery.reason,
+      },
+      conversation_store: {
+        ok: conversationDelivery.ok,
+        skipped: conversationDelivery.skipped,
+        reason: conversationDelivery.reason,
+        error: conversationDelivery.error,
       },
     });
   } catch (error) {
@@ -416,6 +464,10 @@ function page() {
         <p class="muted">conversas processadas</p>
       </div>
       <div class="card wide">
+        <h2>Saude Do Gerente</h2>
+        <div id="healthRows"><p class="muted">Carregando.</p></div>
+      </div>
+      <div class="card wide">
         <h2>Ranking De Modelos</h2>
         <table><thead><tr><th>Modelo</th><th>Score</th><th>Runs</th><th>Fallback</th></tr></thead><tbody id="models"></tbody></table>
       </div>
@@ -456,10 +508,15 @@ function page() {
         "<div class='box'><strong>Comando entendido</strong><div>" + esc(item.normalized_message) + "</div></div>",
         "<div class='box'><strong>Resposta enviada</strong><div>" + esc(item.response_preview) + "</div></div>",
         "<div class='box'><strong>Origem</strong><div>" + esc(item.from || "desconhecida") + (item.task_id ? "<br>Task: " + esc(item.task_id) : "") + "</div></div>",
+        "<div class='box'><strong>Agente / LLM</strong><div>" + esc(item.agent_name || item.agent_id || "nao identificado") + "<br>" + esc(item.llm_label || item.llm_id || "nao identificado") + "</div></div>",
+        "<div class='box'><strong>Fonte</strong><div>" + esc(item.response_source || "nao identificado") + "</div></div>",
         "</div>",
         error,
         "</div>"
       ].join("");
+    }
+    function healthCard(item) {
+      return "<p>" + badge(item.ok ? "ok" : (item.configured ? "erro" : "ausente"), item.ok ? "" : "danger") + " <strong>" + esc(item.label || item.id || "item") + "</strong><br><span class='muted'>" + esc(item.detail || "") + "</span></p>";
     }
     async function loadData() {
       const res = await fetch("/api/summary");
@@ -469,6 +526,11 @@ function page() {
       document.getElementById("outputs").textContent = data.totals.outputs;
       document.getElementById("whatsappCount").textContent = data.totals.whatsapp_conversations;
       document.getElementById("whatsappRows").innerHTML = data.whatsapp_conversations.slice(0, 6).map(conversationCard).join("") || "<p class='muted'>Sem conversas.</p>";
+      document.getElementById("healthRows").innerHTML = [
+        "<p>" + badge("historico: " + text(data.health.conversation_source), data.health.conversation_error ? "danger" : "") + "</p>",
+        ...(data.health.last_error ? ["<p>" + badge("ultimo erro", "danger") + " <span class='muted'>" + esc(data.health.last_error) + "</span></p>"] : []),
+        ...data.health.providers.map(healthCard)
+      ].join("");
       document.getElementById("models").innerHTML = data.ranking.models.slice(0, 8).map((m) => row([
         "<code>" + esc(m.key) + "</code>",
         esc(m.avg_score),
@@ -502,7 +564,7 @@ function page() {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${HOST}:${PORT}`);
   if (url.pathname === "/api/whatsapp/inbound" && req.method === "POST") return void whatsappInbound(req, res);
-  if (url.pathname === "/api/summary") return json(res, summary());
+  if (url.pathname === "/api/summary") return void summary().then((body) => json(res, body)).catch((error) => json(res, { ok: false, error: error.message }, 500));
   if (url.pathname === "/health") return json(res, { ok: true, service: "gerente-dashboard" });
   if (url.pathname === "/") return html(res, page());
   return json(res, { error: "not found" }, 404);
