@@ -164,8 +164,10 @@ function normalizeGerenteCommand(text = "") {
     .toLowerCase();
   if (normalized.startsWith("/gerente")) return value;
   if (normalized === "gerente") return "/gerente ajuda";
-  if (normalized.startsWith("gerente ")) return `/gerente ${value.slice(value.indexOf(" ") + 1).trim()}`;
-  if (normalized.startsWith("barra gerente ")) return `/gerente ${value.split(/\s+/).slice(2).join(" ").trim()}`;
+  const gerenteMatch = value.match(/^gerente[\s,.:;-]+(.+)$/i);
+  if (gerenteMatch) return `/gerente ${gerenteMatch[1].trim()}`;
+  const barraGerenteMatch = value.match(/^barra\s+gerente[\s,.:;-]+(.+)$/i);
+  if (barraGerenteMatch) return `/gerente ${barraGerenteMatch[1].trim()}`;
   return value;
 }
 
