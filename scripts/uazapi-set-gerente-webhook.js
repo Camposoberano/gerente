@@ -49,6 +49,41 @@ upsertEnv("GERENTE_WEBHOOK_TOKEN", webhookToken);
 const url = `${publicBase}/api/whatsapp/inbound?token=${encodeURIComponent(webhookToken)}`;
 const events = ["messages"];
 
+async function listWebhooks() {
+  const response = await fetch(`${baseUrl}/webhook`, {
+    method: "GET",
+    headers: { token: instanceToken },
+  });
+  if (!response.ok) return [];
+  const data = await response.json().catch(() => []);
+  return Array.isArray(data) ? data : Object.values(data || {});
+}
+
+async function deleteWebhook(id) {
+  if (!id) return false;
+  const response = await fetch(`${baseUrl}/webhook`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token: instanceToken,
+    },
+    body: JSON.stringify({
+      id,
+      action: "delete",
+    }),
+  });
+  return response.ok;
+}
+
+const existingWebhooks = await listWebhooks();
+const deletedCount = (
+  await Promise.all(
+    existingWebhooks
+      .filter((webhook) => String(webhook.url || "").includes("/api/whatsapp/inbound"))
+      .map((webhook) => deleteWebhook(webhook.id))
+  )
+).filter(Boolean).length;
+
 const response = await fetch(`${baseUrl}/webhook`, {
   method: "POST",
   headers: {
@@ -71,6 +106,7 @@ console.log(JSON.stringify({
   public_base: publicBase,
   endpoint: "/api/whatsapp/inbound",
   token_configured: true,
+  old_webhooks_deleted: deletedCount,
   response_shape: data && typeof data === "object" ? Object.keys(data).slice(0, 8) : [],
 }, null, 2));
 
