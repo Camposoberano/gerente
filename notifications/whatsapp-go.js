@@ -10,12 +10,12 @@ export function whatsappGoConfigured(env = process.env) {
   );
 }
 
-export async function sendWhatsAppGoMessage({ text, env = process.env, fetchImpl = fetch }) {
+export async function sendWhatsAppGoMessage({ text, number, env = process.env, fetchImpl = fetch }) {
   const baseUrl = cleanBaseUrl(env.WHATSAPP_GO_URL || env.UAZAPI_URL);
   const token = env.WHATSAPP_GO_INSTANCE_TOKEN || env.UAZAPI_INSTANCE_TOKEN;
-  const number = env.WHATSAPP_NOTIFY_TO;
+  const target = number || env.WHATSAPP_NOTIFY_TO;
 
-  if (!baseUrl || !token || !number) {
+  if (!baseUrl || !token || !target) {
     return {
       ok: false,
       skipped: true,
@@ -30,7 +30,7 @@ export async function sendWhatsAppGoMessage({ text, env = process.env, fetchImpl
       token,
     },
     body: JSON.stringify({
-      number,
+      number: target,
       text,
       delay: Number(env.WHATSAPP_NOTIFY_DELAY || 0),
     }),
@@ -43,4 +43,3 @@ export async function sendWhatsAppGoMessage({ text, env = process.env, fetchImpl
     data,
   };
 }
-

@@ -116,11 +116,36 @@ function deepFindString(value, keys) {
   return null;
 }
 
+function deepFindBoolean(value, keys) {
+  if (!value || typeof value !== "object") return null;
+  for (const key of keys) {
+    if (typeof value[key] === "boolean") return value[key];
+    if (typeof value[key] === "string" && /^(true|false)$/i.test(value[key])) {
+      return value[key].toLowerCase() === "true";
+    }
+  }
+  for (const nested of Object.values(value)) {
+    if (nested && typeof nested === "object") {
+      const found = deepFindBoolean(nested, keys);
+      if (found !== null) return found;
+    }
+  }
+  return null;
+}
+
 function extractWhatsAppMessage(payload) {
   return {
     text: deepFindString(payload, ["text", "message", "body", "content", "caption", "conversation"]) || "",
     from: deepFindString(payload, ["from", "number", "phone", "sender", "remoteJid", "participant"]) || null,
+    chat: deepFindString(payload, ["remoteJid", "chatId", "chat_id", "jid", "groupJid", "groupjid"]) || null,
+    fromMe: deepFindBoolean(payload, ["fromMe", "from_me", "isFromMe", "is_from_me", "from_me_boolean"]) === true,
   };
+}
+
+function whatsappReplyTarget(incoming, env = process.env) {
+  if (incoming.chat && incoming.chat.includes("@g.us")) return incoming.chat;
+  if (incoming.from && incoming.from.includes("@g.us")) return incoming.from;
+  return env.GERENTE_WHATSAPP_GROUP_JID || incoming.chat || incoming.from || env.WHATSAPP_NOTIFY_TO;
 }
 
 async function whatsappInbound(req, res) {
@@ -134,8 +159,28 @@ async function whatsappInbound(req, res) {
     const raw = await readRequestBody(req);
     const payload = raw ? JSON.parse(raw) : {};
     const incoming = extractWhatsAppMessage(payload);
+    const text = String(incoming.text || "").trim();
+    const commandText = text.toLowerCase();
+
+    if (incoming.fromMe || !text || !commandText.startsWith("/gerente")) {
+      recordNotification({
+        type: "whatsapp_inbound_ignored",
+        title: "Mensagem ignorada via WhatsApp",
+        channel: "whatsapp_go",
+        from: incoming.from,
+        message: text.slice(0, 200),
+        reason: incoming.fromMe ? "from_me" : (!text ? "empty" : "not_gerente_command"),
+      });
+
+      return json(res, {
+        ok: true,
+        ignored: true,
+        reason: incoming.fromMe ? "from_me" : (!text ? "empty" : "not_gerente_command"),
+      });
+    }
+
     const result = handleGerenteCommand({
-      text: incoming.text,
+      text,
       requestedBy: incoming.from ? `whatsapp:${incoming.from}` : "whatsapp",
     });
 
@@ -150,14 +195,16 @@ async function whatsappInbound(req, res) {
     });
 
     let delivery = { ok: false, skipped: true, reason: "whatsapp_go_not_configured" };
+    const replyTarget = whatsappReplyTarget(incoming, process.env);
     if (whatsappGoConfigured(process.env)) {
-      delivery = await sendWhatsAppGoMessage({ text: result.message, env: process.env });
+      delivery = await sendWhatsAppGoMessage({ text: result.message, number: replyTarget, env: process.env });
     }
 
     return json(res, {
       ok: true,
       received_text: Boolean(incoming.text),
       from_detected: Boolean(incoming.from),
+      chat_detected: Boolean(incoming.chat),
       result_kind: result.kind,
       task_id: result.plan?.task_id || null,
       reply_delivery: {
