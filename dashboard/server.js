@@ -58,22 +58,46 @@ function latestOutputs(limit = 12) {
     .slice(0, limit);
 }
 
+function latestWhatsAppConversations(notifications, limit = 20) {
+  return notifications
+    .filter((item) => item.channel === "whatsapp_go" && item.type === "whatsapp_inbound")
+    .slice(-limit)
+    .reverse()
+    .map((item) => ({
+      id: item.id,
+      created_at: item.created_at,
+      from: item.from || null,
+      original_message: item.original_message || item.message || "",
+      normalized_message: item.message || "",
+      response_preview: item.response_preview || "",
+      result_kind: item.result_kind || null,
+      task_id: item.task_id || null,
+      audio_detected: Boolean(item.audio_detected),
+      transcribed: Boolean(item.transcribed),
+      transcription_error: item.transcription_error || null,
+    }));
+}
+
 function summary() {
   const arenaRuns = readArenaRuns();
   const ranking = buildArenaRanking();
-  const notifications = readNotifications().slice(-20).reverse();
+  const allNotifications = readNotifications();
+  const notifications = allNotifications.slice(-20).reverse();
+  const whatsappConversations = latestWhatsAppConversations(allNotifications);
   const lastRun = arenaRuns.at(-1) || null;
 
   return {
     generated_at: new Date().toISOString(),
     totals: {
       arena_runs: arenaRuns.length,
-      notifications: readNotifications().length,
+      notifications: allNotifications.length,
       outputs: latestOutputs(1000).length,
+      whatsapp_conversations: whatsappConversations.length,
     },
     last_run: lastRun,
     ranking,
     notifications,
+    whatsapp_conversations: whatsappConversations,
     outputs: latestOutputs(),
   };
 }
@@ -337,7 +361,7 @@ function page() {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gerente Dashboard</title>
   <style>
-    :root { --bg:#f5f7fa; --card:#fff; --ink:#17202a; --muted:#667085; --line:#d8dee6; --accent:#0f766e; --warn:#92400e; }
+    :root { --bg:#f5f7fa; --card:#fff; --ink:#17202a; --muted:#667085; --line:#d8dee6; --accent:#0f766e; --warn:#92400e; --danger:#991b1b; }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--bg); color:var(--ink); font-family:Arial, Helvetica, sans-serif; }
     main { max-width:1180px; margin:0 auto; padding:28px 18px 46px; }
@@ -357,8 +381,16 @@ function page() {
     code { background:#eef2f6; padding:2px 5px; border-radius:5px; }
     .pill { display:inline-block; padding:3px 8px; border-radius:999px; background:#e6f4f1; color:var(--accent); font-weight:700; font-size:12px; }
     .warn { background:#fff7ed; color:var(--warn); }
+    .danger { background:#fee2e2; color:var(--danger); }
+    .conversation { border-top:1px solid var(--line); padding:12px 0; }
+    .conversation:first-child { border-top:0; padding-top:0; }
+    .conversation-head { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+    .conversation-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .box { background:#f8fafc; border:1px solid var(--line); border-radius:7px; padding:10px; min-width:0; }
+    .box strong { display:block; font-size:12px; color:var(--muted); margin-bottom:5px; }
+    .box div { overflow-wrap:anywhere; white-space:pre-wrap; font-size:13px; }
     pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#111827; color:#f8fafc; border-radius:8px; padding:12px; font-size:12px; max-height:260px; overflow:auto; }
-    @media (max-width:900px) { .grid { grid-template-columns:1fr; } .wide { grid-column:auto; } header { display:block; } button { margin-top:12px; } }
+    @media (max-width:900px) { .grid { grid-template-columns:1fr; } .wide { grid-column:auto; } header { display:block; } button { margin-top:12px; } .conversation-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -374,6 +406,15 @@ function page() {
       <div class="card"><h2>Runs Arena</h2><div class="stat" id="runs">0</div><p class="muted">execucoes pontuadas</p></div>
       <div class="card"><h2>Notificacoes</h2><div class="stat" id="notifications">0</div><p class="muted">eventos registrados</p></div>
       <div class="card"><h2>Outputs</h2><div class="stat" id="outputs">0</div><p class="muted">arquivos salvos</p></div>
+      <div class="card wide">
+        <h2>Conversas WhatsApp</h2>
+        <div id="whatsappRows"><p class="muted">Sem conversas.</p></div>
+      </div>
+      <div class="card">
+        <h2>Status WhatsApp</h2>
+        <div class="stat" id="whatsappCount">0</div>
+        <p class="muted">conversas processadas</p>
+      </div>
       <div class="card wide">
         <h2>Ranking De Modelos</h2>
         <table><thead><tr><th>Modelo</th><th>Score</th><th>Runs</th><th>Fallback</th></tr></thead><tbody id="models"></tbody></table>
@@ -398,33 +439,56 @@ function page() {
   </main>
   <script>
     function text(value) { return value == null ? "" : String(value); }
+    function esc(value) {
+      return text(value).replace(/[&<>"']/g, (ch) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+    }
     function row(cells) { return "<tr>" + cells.map((c) => "<td>" + c + "</td>").join("") + "</tr>"; }
+    function badge(label, extra) { return "<span class='pill " + (extra || "") + "'>" + esc(label) + "</span>"; }
+    function conversationCard(item) {
+      const audio = item.audio_detected ? badge(item.transcribed ? "audio transcrito" : "audio", item.transcription_error ? "danger" : "") : badge("texto");
+      const kind = badge(item.result_kind || "sem tipo", item.result_kind === "plan" ? "warn" : "");
+      const error = item.transcription_error ? "<p>" + badge("erro transcricao", "danger") + " <span class='muted'>" + esc(item.transcription_error) + "</span></p>" : "";
+      return [
+        "<div class='conversation'>",
+        "<div class='conversation-head'>" + kind + audio + "<span class='muted'>" + esc(item.created_at) + "</span></div>",
+        "<div class='conversation-grid'>",
+        "<div class='box'><strong>Entrada original</strong><div>" + esc(item.original_message) + "</div></div>",
+        "<div class='box'><strong>Comando entendido</strong><div>" + esc(item.normalized_message) + "</div></div>",
+        "<div class='box'><strong>Resposta enviada</strong><div>" + esc(item.response_preview) + "</div></div>",
+        "<div class='box'><strong>Origem</strong><div>" + esc(item.from || "desconhecida") + (item.task_id ? "<br>Task: " + esc(item.task_id) : "") + "</div></div>",
+        "</div>",
+        error,
+        "</div>"
+      ].join("");
+    }
     async function loadData() {
       const res = await fetch("/api/summary");
       const data = await res.json();
       document.getElementById("runs").textContent = data.totals.arena_runs;
       document.getElementById("notifications").textContent = data.totals.notifications;
       document.getElementById("outputs").textContent = data.totals.outputs;
+      document.getElementById("whatsappCount").textContent = data.totals.whatsapp_conversations;
+      document.getElementById("whatsappRows").innerHTML = data.whatsapp_conversations.slice(0, 6).map(conversationCard).join("") || "<p class='muted'>Sem conversas.</p>";
       document.getElementById("models").innerHTML = data.ranking.models.slice(0, 8).map((m) => row([
-        "<code>" + text(m.key) + "</code>",
-        text(m.avg_score),
-        text(m.runs),
-        text(m.fallback_rate)
+        "<code>" + esc(m.key) + "</code>",
+        esc(m.avg_score),
+        esc(m.runs),
+        esc(m.fallback_rate)
       ])).join("") || row(["Sem dados", "", "", ""]);
       document.getElementById("lastRun").innerHTML = data.last_run ? [
-        "<p><span class='pill'>" + text(data.last_run.area) + "</span> <span class='pill warn'>" + text(data.last_run.risk) + "</span></p>",
-        "<p>Modelo: <code>" + text(data.last_run.preferred_model) + "</code></p>",
-        "<p>Agente: <code>" + text(data.last_run.primary_agent) + "</code></p>",
-        "<p>Score: " + text(data.last_run.metrics && data.last_run.metrics.score) + "</p>"
+        "<p>" + badge(data.last_run.area) + " " + badge(data.last_run.risk, "warn") + "</p>",
+        "<p>Modelo: <code>" + esc(data.last_run.preferred_model) + "</code></p>",
+        "<p>Agente: <code>" + esc(data.last_run.primary_agent) + "</code></p>",
+        "<p>Score: " + esc(data.last_run.metrics && data.last_run.metrics.score) + "</p>"
       ].join("") : "Sem dados.";
       document.getElementById("outputRows").innerHTML = data.outputs.map((o) => row([
-        "<code>" + text(o.name) + "</code>",
-        text(o.area),
-        text(o.risk),
-        text(o.tarefa).slice(0, 120)
+        "<code>" + esc(o.name) + "</code>",
+        esc(o.area),
+        esc(o.risk),
+        esc(text(o.tarefa).slice(0, 120))
       ])).join("") || row(["Sem dados", "", "", ""]);
       document.getElementById("notifRows").innerHTML = data.notifications.slice(0, 8).map((n) => (
-        "<p><span class='pill'>" + text(n.channel) + "</span> " + text(n.title) + "<br><span class='muted'>" + text(n.created_at) + "</span></p>"
+        "<p>" + badge(n.channel) + " " + esc(n.title) + "<br><span class='muted'>" + esc(n.created_at) + "</span></p>"
       )).join("") || "<p class='muted'>Sem notificacoes.</p>";
       document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
     }
