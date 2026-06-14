@@ -1,5 +1,6 @@
 import { createExecutionPlan } from "../router/v2.js";
 import { AGENTS, AGENTE_IDS, GERENTE_IDS } from "../agents/definitions.js";
+import { buildAgentInventoryReply, isAgentInventoryQuestion } from "./agent-inventory.js";
 import { interpretGerenteWithGemini } from "./gemini-conversation.js";
 
 export function gerenteUsage() {
@@ -59,6 +60,10 @@ function agentListReply() {
 function conversationalReply(task = "") {
   const normalized = normalizeText(task);
   const replies = [];
+
+  if (isAgentInventoryQuestion(task)) {
+    return buildAgentInventoryReply();
+  }
 
   if (/(me ouviu|esta me ouvindo|ta me ouvindo|voce me ouviu|esta ouvindo|ouvindo)/.test(normalized)) {
     replies.push("Sim, estou te ouvindo.");
@@ -185,12 +190,22 @@ export async function handleGerenteCommandSmart({ text, project = null, requeste
     return { ok: true, kind: parsed.type, message: parsed.message };
   }
 
+  const taskText = String(text || "").replace(/^\/gerente\s*/i, "").trim();
+  if (isAgentInventoryQuestion(taskText)) {
+    return {
+      ok: true,
+      kind: "chat",
+      message: buildAgentInventoryReply(),
+      parsed: { ...parsed, source: "agent_inventory" },
+    };
+  }
+
   const firstToken = normalizeToken(String(text || "").trim().split(/\s+/)[1] || "");
   const forcedTask = parsed.type === "task" && ["executar", "fazer", "produto", "negocio"].includes(firstToken);
 
   if (!forcedTask) {
     const gemini = await interpretGerenteWithGemini({
-      text: String(text || "").replace(/^\/gerente\s*/i, "").trim(),
+      text: taskText,
       env,
       fetchImpl,
     }).catch(() => null);

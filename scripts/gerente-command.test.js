@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { handleGerenteCommand, parseGerenteText } from "../gerente/command.js";
+import { handleGerenteCommand, handleGerenteCommandSmart, parseGerenteText } from "../gerente/command.js";
 
 assert.equal(parseGerenteText("/gerente ajuda").type, "help");
 assert.equal(parseGerenteText("/gerente produto revisar frontend").manager, "gerente_produto");
@@ -43,5 +43,21 @@ const transcriptionVariant = handleGerenteCommand({
 
 assert.equal(transcriptionVariant.kind, "chat");
 assert.ok(transcriptionVariant.message.includes("Agentes disponiveis"));
+
+const inventoryResult = await handleGerenteCommandSmart({
+  text: "/gerente me passa o nome do agente, LLM usado, funcao e custo por 1 milhao de tokens de cada agente",
+  requestedBy: "test",
+  env: {},
+  fetchImpl: async () => {
+    throw new Error("Gemini should not be called for inventory");
+  },
+});
+
+assert.equal(inventoryResult.kind, "chat");
+assert.equal(inventoryResult.parsed.source, "agent_inventory");
+assert.ok(inventoryResult.message.includes("Inventario dos agentes principais"));
+assert.ok(inventoryResult.message.includes("Formato: agente | LLM principal | funcao | custo por 1M tokens"));
+assert.ok(inventoryResult.message.includes("gerente_produto"));
+assert.ok(inventoryResult.message.includes("US$"));
 
 console.log("gerente command tests passed");
