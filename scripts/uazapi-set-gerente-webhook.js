@@ -47,7 +47,7 @@ upsertEnv("GERENTE_PUBLIC_BASE", publicBase);
 upsertEnv("GERENTE_WEBHOOK_TOKEN", webhookToken);
 
 const url = `${publicBase}/api/whatsapp/inbound?token=${encodeURIComponent(webhookToken)}`;
-const events = ["messages", "messages_update", "connection", "sender", "call"];
+const events = ["messages"];
 
 const response = await fetch(`${baseUrl}/webhook`, {
   method: "POST",
