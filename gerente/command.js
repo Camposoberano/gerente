@@ -1,4 +1,5 @@
 import { createExecutionPlan } from "../router/v2.js";
+import { AGENTS, AGENTE_IDS, GERENTE_IDS } from "../agents/definitions.js";
 
 export function gerenteUsage() {
   return [
@@ -48,20 +49,32 @@ function looksOperational(task = "") {
   ].some((term) => normalized.includes(term));
 }
 
+function agentListReply() {
+  const managers = GERENTE_IDS.map((id) => `${id}: ${AGENTS[id]?.nome || id}`).join("; ");
+  const agents = AGENTE_IDS.map((id) => `${id}: ${AGENTS[id]?.nome || id}`).join("; ");
+  return `Agentes disponiveis. Gerentes: ${managers}. Agentes: ${agents}.`;
+}
+
 function conversationalReply(task = "") {
   const normalized = normalizeText(task);
+  const replies = [];
+
   if (/(me ouviu|esta me ouvindo|ta me ouvindo|voce me ouviu|esta ouvindo|ouvindo)/.test(normalized)) {
-    return "Sim, estou te ouvindo. Pode mandar por texto ou audio começando com Gerente.";
+    replies.push("Sim, estou te ouvindo.");
   }
   if (/(esta ok|ta ok|esta pronto|ta pronto|apto|funcionando|online)/.test(normalized)) {
-    return "Sim, estou online e pronto para conversar. Quando quiser que eu execute algo, diga: Gerente, executar ...";
+    replies.push("Estou online e pronto para conversar.");
   }
   if (/(como eu te chamo|como devo chamar|como chamar|qual comando|como usar)/.test(normalized)) {
-    return "Para conversar, comece com Gerente. Para executar uma tarefa, diga Gerente, executar e explique o que precisa.";
+    replies.push("Para conversar, comece com Gerente. Para executar uma tarefa, diga Gerente, executar e explique o que precisa.");
+  }
+  if (/(lista|lixo|listar|quais|qual).*(agentes|agente)|(?:agentes|agente).*(disponiveis|temos|lista|listar)/.test(normalized)) {
+    replies.push(agentListReply());
   }
   if (/(link|url|endereco).*(projeto|programa|dashboard|gerente)|(?:projeto|programa|dashboard|gerente).*(link|url|endereco)/.test(normalized)) {
-    return "O link do gerente em teste é https://gerente.soberano.pro. Esse é o ambiente correto para acompanhar o dashboard e o webhook.";
+    replies.push("O link do gerente em teste é https://gerente.soberano.pro. Esse é o ambiente correto para acompanhar o dashboard e o webhook.");
   }
+  if (replies.length) return replies.join("\n\n");
   if (normalized.includes("?") || /^(qual|quais|como|quando|onde|porque|por que|me explica|explique|confirma|confirme|pode|posso)\b/.test(normalized)) {
     return "Entendi. Posso conversar e tirar dúvidas por aqui. Se você quiser que eu transforme isso em ação, diga: Gerente, executar ...";
   }

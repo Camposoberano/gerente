@@ -26,4 +26,22 @@ const chatResult = handleGerenteCommand({
 assert.equal(chatResult.kind, "chat");
 assert.ok(chatResult.message.includes("estou te ouvindo"));
 
+const compositeChat = handleGerenteCommand({
+  text: "/gerente me de um ok que voce esta funcionando, me passa a lista dos agentes que temos disponivel",
+  requestedBy: "test",
+});
+
+assert.equal(compositeChat.kind, "chat");
+assert.ok(compositeChat.message.includes("Estou online"));
+assert.ok(compositeChat.message.includes("Agentes disponiveis"));
+assert.ok(compositeChat.message.includes("frontend"));
+
+const transcriptionVariant = handleGerenteCommand({
+  text: "/gerente quero o lixo dos agentes que estao disponiveis",
+  requestedBy: "test",
+});
+
+assert.equal(transcriptionVariant.kind, "chat");
+assert.ok(transcriptionVariant.message.includes("Agentes disponiveis"));
+
 console.log("gerente command tests passed");
