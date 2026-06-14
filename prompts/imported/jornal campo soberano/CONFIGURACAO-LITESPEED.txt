@@ -1,0 +1,440 @@
+═══════════════════════════════════════════════════════════════
+    ⚡ GUIA COMPLETO: LITESPEED CACHE
+    NEWS SOBERANO v1.3.3
+═══════════════════════════════════════════════════════════════
+
+🎯 CONFIGURAÇÕES OTIMIZADAS PARA PORTAL DE NOTÍCIAS
+
+═══════════════════════════════════════════════════════════════
+    ✅ SUAS CONFIGURAÇÕES ATUAIS (ÓTIMAS!)
+═══════════════════════════════════════════════════════════════
+
+✅ Cache padrão
+✅ TTL mais alto
+✅ Cache do navegador
+✅ Otimização de imagens
+✅ Cache móvel
+✅ Miniaturização de CSS, JS e HTML
+✅ Otimização para exibição de fontes
+✅ JS defere (externo e inline)
+✅ DNS Prefetch
+✅ Cache Gravatar
+✅ Remover strings de consulta
+✅ Remover emoji do WordPress
+✅ Remover tags noscript
+✅ CSS e JS combinam
+✅ Carregamento assíncrono de CSS com CSS crítico
+✅ Removido CSS não utilizado
+✅ Lazy load para iframes
+
+═══════════════════════════════════════════════════════════════
+    🔧 AJUSTES ADICIONAIS RECOMENDADOS
+═══════════════════════════════════════════════════════════════
+
+ABA: CACHE
+──────────────────────────────────────────────────────────────
+
+1. Cache Padrão:
+   Enable Cache: ON ✅
+   TTL: 604800 (7 dias) para notícias antigas
+
+2. Cache Específico:
+   Separate Cache Mobile: ON ✅
+   Cache Login Users: OFF
+   Cache REST API: ON
+   Cache Pages with Query String: ON
+
+3. Purge:
+   Purge All On Upgrade: ON
+   Auto Purge Rules:
+   ☑ Post/Page
+   ☑ Comments
+   ☑ Homepage
+   ☑ Categories
+   ☑ Tags
+   ☑ Author
+
+ABA: CDN
+──────────────────────────────────────────────────────────────
+
+Use CDN: OFF (Hostinger já tem CDN interno)
+QUIC.cloud CDN: Pode ativar se quiser (gratuito)
+
+ABA: IMAGE OPTIMIZATION
+──────────────────────────────────────────────────────────────
+
+✅ Auto Pull Images: ON
+✅ Optimize Original: ON
+✅ Remove Original Backups: ON
+✅ WebP: ON (já está em WebP)
+✅ Lossless: OFF (Lossy para menor tamanho)
+✅ Preserve EXIF: OFF (reduz tamanho)
+✅ Lazy Load: ON
+   ☑ Images
+   ☑ Iframes
+   ☐ Thumbnail (desmarcar - causa problemas)
+
+ABA: PAGE OPTIMIZATION
+──────────────────────────────────────────────────────────────
+
+CSS Settings:
+✅ CSS Minify: ON
+✅ CSS Combine: ON
+✅ Generate Critical CSS: ON ⭐ IMPORTANTE
+✅ Async CSS: ON
+✅ Remove Unused CSS: ON ⚠️ Testar (pode quebrar)
+
+JS Settings:
+✅ JS Minify: ON
+✅ JS Combine: ON
+✅ JS Defer: ON
+✅ Exclude Inline JS: Adicionar:
+   gtag
+   fbq
+   _gaq
+
+HTML Settings:
+✅ HTML Minify: ON
+✅ DNS Prefetch: ON
+   Adicionar:
+   //fonts.googleapis.com
+   //www.google-analytics.com
+
+Media Settings:
+✅ Lazy Load Images: ON
+   Exclude Classes:
+   wp-post-image
+   hero-image
+   no-lazy
+
+✅ Lazy Load Iframes: ON
+✅ Add Missing Sizes: ON
+✅ Responsive Placeholder: ON
+
+ABA: DATABASE
+──────────────────────────────────────────────────────────────
+
+Otimização Semanal:
+☑ Revision Posts
+☑ Auto Drafts
+☑ Trashed Posts
+☑ Spam Comments
+☑ Trashed Comments
+☑ Expired Transients
+☑ All Transients
+☑ Optimize Tables
+
+Frequência: Weekly
+
+ABA: CRAWLER (EXCLUSIVO LITESPEED)
+──────────────────────────────────────────────────────────────
+
+⭐ CRAWLER = Pre-cache automático
+
+Crawler: ON
+Crawl Delay: 500ms
+Run Duration: 400s
+Interval: 600s (10 min)
+Threads: 3
+
+Sitemap:
+✅ Use sitemap para crawler
+URL: https://jornal.camposoberano.com.br/sitemap.xml
+
+═══════════════════════════════════════════════════════════════
+    ⚠️ EXCLUSÕES IMPORTANTES PARA AMP
+═══════════════════════════════════════════════════════════════
+
+ABA: CACHE → EXCLUDES
+──────────────────────────────────────────────────────────────
+
+Do Not Cache URIs:
+/amp/
+/*/amp/
+?amp=1
+?amp
+
+Do Not Cache Query Strings:
+amp
+amp=1
+
+Do Not Cache Categories:
+(deixar vazio)
+
+Do Not Cache Tags:
+(deixar vazio)
+
+═══════════════════════════════════════════════════════════════
+    🎯 CONFIGURAÇÃO CSS CRÍTICO
+═══════════════════════════════════════════════════════════════
+
+⭐ MUITO IMPORTANTE PARA PERFORMANCE
+
+1. Page Optimization → CSS Settings
+2. Generate Critical CSS: ON
+3. Separate CCSS Cache Mobile: ON
+4. Critical CSS Rules:
+   (deixar automático)
+
+5. Clicar em "Generate Critical CSS"
+6. Aguardar processamento
+7. Status deve ficar "Queue Completed"
+
+═══════════════════════════════════════════════════════════════
+    🖼️ OTIMIZAÇÃO DE IMAGENS
+═══════════════════════════════════════════════════════════════
+
+MÉTODO 1: Via Plugin (Automático)
+──────────────────────────────────────────────────────────────
+
+1. Image Optimization
+2. Auto Request Cron: ON
+3. Clicar "Send Optimization Request"
+4. Aguardar processamento
+5. Imagens otimizadas em WebP
+
+MÉTODO 2: Bulk Optimization
+──────────────────────────────────────────────────────────────
+
+1. Media → Image Optimization
+2. "Send All Requests"
+3. Aguardar (pode demorar)
+4. Verificar créditos QUIC.cloud
+
+═══════════════════════════════════════════════════════════════
+    ⚡ PERFORMANCE ESPERADA
+═══════════════════════════════════════════════════════════════
+
+COM LITESPEED CONFIGURADO:
+
+PageSpeed Insights:
+  Mobile: 90-95 ✅
+  Desktop: 95-100 ✅
+
+GTmetrix:
+  Grade: A
+  Performance: 90%+
+  Structure: 95%+
+
+Core Web Vitals:
+  LCP: < 2.5s ✅
+  FID: < 100ms ✅
+  CLS: < 0.1 ✅
+
+Tempo de Carregamento:
+  Primeira Visita: 1-2s
+  Cache Hit: 0.3-0.5s ⚡
+
+═══════════════════════════════════════════════════════════════
+    🧪 TESTE APÓS CONFIGURAÇÃO
+═══════════════════════════════════════════════════════════════
+
+1. LIMPAR CACHE:
+   LiteSpeed Cache → Purge → Purge All
+
+2. TESTAR HOMEPAGE:
+   https://jornal.camposoberano.com.br/
+   - Abrir DevTools (F12)
+   - Network → Recarregar
+   - Verificar header: x-litespeed-cache: hit
+
+3. TESTAR AMP:
+   https://jornal.camposoberano.com.br/?amp=1
+   - Validador AMP: 0 erros
+   - Console: "AMP validation successful"
+
+4. TESTAR MOBILE:
+   Chrome DevTools → Toggle Device
+   Simular iPhone/Galaxy
+
+5. PAGESPEED:
+   https://pagespeed.web.dev/
+   Testar homepage e post
+
+═══════════════════════════════════════════════════════════════
+    🔄 ROTINA DE MANUTENÇÃO
+═══════════════════════════════════════════════════════════════
+
+DIÁRIA:
+• Crawler roda automaticamente (pré-cache)
+• Purge automático ao publicar posts
+
+SEMANAL:
+• Database optimization (automático)
+• Verificar créditos QUIC.cloud
+• Revisar logs de erro
+
+MENSAL:
+• Regenerar CSS crítico
+• Otimizar novas imagens
+• Revisar exclusões
+
+═══════════════════════════════════════════════════════════════
+    🆘 SOLUÇÃO DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA: Site quebrado após ativar CSS Combine
+SOLUÇÃO:
+   1. Page Optimization → CSS Combine: OFF
+   2. Purge All
+   3. Testar CSS Minify isolado
+   4. Se funcionar, testar Combine novamente
+
+PROBLEMA: Imagens não aparecem (lazy load)
+SOLUÇÃO:
+   1. Media → Lazy Load Images
+   2. Exclude Classes: Adicionar "wp-post-image"
+   3. Purge All
+   4. Tema v1.3.3 já tem exclusões
+
+PROBLEMA: JS não funciona
+SOLUÇÃO:
+   1. JS Defer: OFF temporariamente
+   2. Identificar script problemático
+   3. Adicionar em JS Excludes
+   4. Reativar Defer
+
+PROBLEMA: AMP com erros
+SOLUÇÃO:
+   1. Verificar exclusões AMP configuradas
+   2. Tema v1.3.3 desabilita LiteSpeed no AMP
+   3. Purge All
+   4. Testar com ?amp=1#development=1
+
+PROBLEMA: Cache não está funcionando
+SOLUÇÃO:
+   1. Verificar .htaccess tem regras LiteSpeed
+   2. Server deve ser LiteSpeed (não Apache/Nginx)
+   3. Plugin LiteSpeed ativo
+   4. Cache: ON
+
+═══════════════════════════════════════════════════════════════
+    💡 DICAS AVANÇADAS
+═══════════════════════════════════════════════════════════════
+
+1. OBJECT CACHE:
+   Se disponível no Hostinger, ativar Redis/Memcached
+   LiteSpeed → Cache → Object Cache: ON
+
+2. ESI (Edge Side Includes):
+   Para widgets dinâmicos
+   Cache → ESI: ON
+   Tema v1.3.3 já configura ESI
+
+3. GUEST MODE:
+   Para visitantes não logados (99% do tráfego)
+   Cache → Guest Mode: ON
+   Guest Optimization: ON
+
+4. BROWSER CACHE:
+   TTL: 31536000 (1 ano)
+   Cache Control → Expires Default
+
+5. VARY COOKIES:
+   Limpar cookies desnecessários
+   Manter apenas:
+   wp-*
+   wordpress*
+   comment*
+
+═══════════════════════════════════════════════════════════════
+    📊 MONITORAMENTO
+═══════════════════════════════════════════════════════════════
+
+MÉTRICAS IMPORTANTES:
+
+Cache Hit Ratio:
+  Objetivo: > 95%
+  Ver em: Toolbox → Report → Cache
+
+Image Optimization:
+  Objetivo: 100% otimizado
+  Ver em: Image Optimization
+
+Critical CSS:
+  Status: Queue Completed
+  Ver em: Page Optimization
+
+Database:
+  Tabelas: Otimizadas
+  Ver em: Database Optimization
+
+═══════════════════════════════════════════════════════════════
+    ✅ CHECKLIST CONFIGURAÇÃO COMPLETA
+═══════════════════════════════════════════════════════════════
+
+CACHE:
+☐ Cache padrão ativo
+☐ TTL configurado (7 dias)
+☐ Cache mobile separado
+☐ Auto purge configurado
+☐ Exclusões AMP adicionadas
+
+PAGE OPTIMIZATION:
+☐ CSS Minify ON
+☐ CSS Combine ON
+☐ CSS Crítico gerado
+☐ JS Minify ON
+☐ JS Defer ON
+☐ HTML Minify ON
+☐ Lazy Load configurado
+☐ Exclusões adicionadas
+
+IMAGE OPTIMIZATION:
+☐ Auto Pull ON
+☐ WebP ON
+☐ Otimização enviada
+☐ Lazy Load ON
+
+DATABASE:
+☐ Auto-otimização semanal ON
+☐ Limpeza configurada
+
+CRAWLER:
+☐ Crawler ON
+☐ Sitemap configurado
+☐ Threads: 3
+
+AMP:
+☐ Exclusões configuradas
+☐ Teste validação: 0 erros
+
+TESTE:
+☐ PageSpeed > 90
+☐ Cache Hit funcionando
+☐ Imagens carregando
+☐ Site responsivo
+☐ AMP válido
+
+═══════════════════════════════════════════════════════════════
+    🎉 RESULTADO FINAL
+═══════════════════════════════════════════════════════════════
+
+COM LITESPEED + NEWS SOBERANO v1.3.3:
+
+✅ Performance máxima
+✅ PageSpeed 90-100
+✅ Cache inteligente
+✅ Imagens WebP otimizadas
+✅ CSS crítico inline
+✅ JS diferido
+✅ Lazy load otimizado
+✅ AMP 100% funcional
+✅ Database limpo
+✅ Crawler pré-cacheando
+
+RESULTADO:
+  Carregamento < 1s
+  Core Web Vitals: VERDE
+  Experiência: EXCELENTE
+  SEO: OTIMIZADO
+
+═══════════════════════════════════════════════════════════════
+
+Data: 11 de Dezembro de 2025
+Versão: 1.3.3
+Otimizado para: LiteSpeed Cache ⚡
+
+🚀 Configuração profissional completa!
+
+═══════════════════════════════════════════════════════════════

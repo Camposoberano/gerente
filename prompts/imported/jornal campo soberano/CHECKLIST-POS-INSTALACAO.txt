@@ -1,0 +1,216 @@
+═══════════════════════════════════════════════════════════════
+    CHECKLIST PÓS-INSTALAÇÃO
+    Tema News Soberano
+═══════════════════════════════════════════════════════════════
+
+Use este checklist para garantir que tudo está configurado!
+
+═══════════════════════════════════════════════════════════════
+    INSTALAÇÃO BÁSICA
+═══════════════════════════════════════════════════════════════
+
+[ ] Tema instalado via WordPress
+    Aparência → Temas → Adicionar novo → Enviar tema
+    Arquivo: news-soberano.zip
+
+[ ] Tema ativado
+    Clique em "Ativar" após instalação
+
+═══════════════════════════════════════════════════════════════
+    CONFIGURAÇÃO VISUAL
+═══════════════════════════════════════════════════════════════
+
+[ ] Logo configurado
+    Aparência → Personalizar → Identidade do site
+    Upload do logo do Jornal Campo Soberano
+
+[ ] Cores ajustadas (se necessário)
+    Aparência → Personalizar → Cores do Tema
+    Padrão: Verde #2d5016 e Marrom #6b4423
+
+[ ] Favicon configurado
+    Aparência → Personalizar → Identidade do site → Ícone do site
+
+═══════════════════════════════════════════════════════════════
+    MENU E NAVEGAÇÃO
+═══════════════════════════════════════════════════════════════
+
+[ ] Menu principal criado
+    Aparência → Menus
+    Adicionar páginas e categorias
+
+[ ] Menu atribuído ao local correto
+    Marcar opção "Menu Principal"
+
+[ ] Menu do rodapé criado (opcional)
+    Criar segundo menu e atribuir a "Menu Rodapé"
+
+═══════════════════════════════════════════════════════════════
+    WIDGETS
+═══════════════════════════════════════════════════════════════
+
+[ ] Sidebar configurada
+    Aparência → Widgets → Sidebar Principal
+    Sugestões:
+    - Posts Populares (News Soberano)
+    - Categorias
+    - Pesquisar
+    - Posts recentes
+
+[ ] Rodapé 1 configurado
+    Aparência → Widgets → Rodapé 1
+    Sugestão: Texto sobre o jornal
+
+[ ] Rodapé 2 configurado
+    Aparência → Widgets → Rodapé 2
+    Sugestão: Links úteis ou categorias
+
+[ ] Rodapé 3 configurado
+    Aparência → Widgets → Rodapé 3
+    Sugestão: Informações de contato
+
+═══════════════════════════════════════════════════════════════
+    CONTEÚDO
+═══════════════════════════════════════════════════════════════
+
+[ ] Post em destaque definido
+    Editar post → Campos personalizados
+    Nome: _is_ns_featured
+    Valor: 1
+
+[ ] Categorias organizadas
+    Posts → Categorias
+
+[ ] Posts com imagens destacadas
+    Cada post deve ter uma imagem destacada
+
+═══════════════════════════════════════════════════════════════
+    PLUGINS (WP ROCKET)
+═══════════════════════════════════════════════════════════════
+
+[ ] Cache ativado
+    WP Rocket → Cache → Cache de página ✓
+
+[ ] Minificação de CSS ativada
+    WP Rocket → Otimização de arquivos → Minificar CSS ✓
+
+[ ] Minificação de JavaScript ativada
+    WP Rocket → Otimização de arquivos → Minificar JavaScript ✓
+
+[ ] LazyLoad de imagens ativado
+    WP Rocket → Mídia → LazyLoad ✓
+
+[ ] Cache salvo e testado
+    Clicar em "Salvar alterações"
+
+═══════════════════════════════════════════════════════════════
+    PLUGINS (RANK MATH SEO)
+═══════════════════════════════════════════════════════════════
+
+[ ] Sitemap XML ativado
+    Rank Math → Sitemap → Ativar
+
+[ ] Breadcrumbs ativados
+    Rank Math → Geral → Breadcrumbs → Ativar
+
+[ ] Schema configurado
+    Rank Math → Títulos e Metas → Posts
+
+[ ] Título e descrição do site
+    Rank Math → Títulos e Metas → Geral
+
+═══════════════════════════════════════════════════════════════
+    AMP (OPCIONAL MAS RECOMENDADO)
+═══════════════════════════════════════════════════════════════
+
+[ ] Plugin AMP instalado
+    Plugins → Adicionar novo → Buscar "AMP"
+    Instalar plugin oficial da Automattic
+
+[ ] Plugin AMP ativado
+    Clicar em "Ativar"
+
+[ ] Modo Paired selecionado
+    AMP → Configurações → Modo: Paired
+
+[ ] AMP testado
+    Acessar: seusite.com.br/post-exemplo/?amp=1
+
+═══════════════════════════════════════════════════════════════
+    PERSONALIZAÇÃO AVANÇADA
+═══════════════════════════════════════════════════════════════
+
+[ ] Redes sociais configuradas
+    Aparência → Personalizar → Redes Sociais
+    Facebook, Twitter, Instagram, YouTube, LinkedIn
+
+[ ] Copyright personalizado
+    Aparência → Personalizar → Rodapé
+
+[ ] Layout do grid ajustado
+    Aparência → Personalizar → Página Inicial
+    Colunas do Grid: 2, 3 ou 4
+
+[ ] Posts por página definido
+    Aparência → Personalizar → Página Inicial
+    Ou: Configurações → Leitura
+
+═══════════════════════════════════════════════════════════════
+    TESTE FINAL
+═══════════════════════════════════════════════════════════════
+
+[ ] Teste no desktop
+    Verificar layout, cores, menu
+
+[ ] Teste no mobile
+    Usar ferramenta mobile do navegador (F12)
+
+[ ] Teste do modo escuro
+    Clicar no botão sol/lua no header
+
+[ ] Teste da busca
+    Usar formulário de busca
+
+[ ] Teste dos links sociais
+    Compartilhar um post
+
+[ ] Teste de velocidade
+    Usar: pagespeed.web.dev
+    ou: gtmetrix.com
+
+[ ] Limpar cache final
+    WP Rocket → Limpar cache
+    Limpar cache do navegador (Ctrl + F5)
+
+═══════════════════════════════════════════════════════════════
+    MANUTENÇÃO
+═══════════════════════════════════════════════════════════════
+
+[ ] Backup do tema criado
+    Guardar cópia do news-soberano.zip
+
+[ ] Documentação salva
+    Guardar INSTRUCOES-DE-INSTALACAO.md
+
+[ ] Atualizações futuras
+    Verificar periodicamente se há atualizações
+
+═══════════════════════════════════════════════════════════════
+    CONCLUSÃO
+═══════════════════════════════════════════════════════════════
+
+✅ Quando todos os itens estiverem marcados, seu site estará
+   100% configurado e otimizado!
+
+✅ Lembre-se de publicar conteúdo regularmente para melhor
+   desempenho no Google
+
+✅ O tema está pronto para escalar e crescer com seu jornal!
+
+═══════════════════════════════════════════════════════════════
+
+Desenvolvido para: Jornal Campo Soberano
+Data: Dezembro 2025
+Versão: 1.0.0
+
+Sucesso com o novo tema! 🎉🚀

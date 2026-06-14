@@ -1,0 +1,91 @@
+═══════════════════════════════════════════════════════════════
+    CORES ATUALIZADAS - BASEADO NA LOGO CS
+═══════════════════════════════════════════════════════════════
+
+✅ TEMA ATUALIZADO COM AS CORES DA LOGO REAL!
+
+═══════════════════════════════════════════════════════════════
+    CORES ANTERIORES (Estimadas)
+═══════════════════════════════════════════════════════════════
+
+❌ Verde Antigo:  #2d5016 (verde escuro)
+❌ Marrom Antigo: #6b4423 (marrom escuro)
+
+═══════════════════════════════════════════════════════════════
+    CORES ATUALIZADAS (Da Logo CS)
+═══════════════════════════════════════════════════════════════
+
+✅ Verde Novo:  #6cb83b (verde vibrante/limão - igual ao C da logo)
+✅ Marrom Novo: #8b6f47 (marrom/terra - tons da logo)
+
+Variações automáticas:
+- Verde Claro:  #88d155
+- Verde Escuro: #539e2a
+- Marrom Claro:  #a58a62
+- Marrom Escuro: #6d5535
+
+═══════════════════════════════════════════════════════════════
+    O QUE FOI ATUALIZADO
+═══════════════════════════════════════════════════════════════
+
+✅ style.css - Variáveis CSS principais
+✅ functions.php - Paleta do editor
+✅ inc/customizer.php - Personalizador (3 locais)
+✅ inc/amp-support.php - Páginas AMP
+✅ INSTRUCOES-DE-INSTALACAO.md - Documentação
+
+═══════════════════════════════════════════════════════════════
+    ARQUIVO ZIP ATUALIZADO
+═══════════════════════════════════════════════════════════════
+
+✅ news-soberano.zip - Recriado com as novas cores
+✅ Pronto para upload no WordPress
+✅ 100% baseado na logo real do Jornal CS
+
+═══════════════════════════════════════════════════════════════
+    ONDE AS CORES SÃO USADAS
+═══════════════════════════════════════════════════════════════
+
+🎨 VERDE (#6cb83b):
+   - Header do site (gradiente)
+   - Badges de categorias
+   - Links e botões principais
+   - Ícones e destaques
+   - Breadcrumbs ativos
+   - Tags hover
+
+🎨 MARROM (#8b6f47):
+   - Header do site (gradiente com verde)
+   - Rodapé (gradiente)
+   - Elementos secundários
+   - Detalhes decorativos
+
+═══════════════════════════════════════════════════════════════
+    RESULTADO VISUAL
+═══════════════════════════════════════════════════════════════
+
+✨ Identidade Visual Forte:
+   - Cores combinam perfeitamente com a logo CS
+   - Verde mais vibrante e moderno
+   - Maior contraste e legibilidade
+   - Profissional e chamativo
+
+✨ Gradientes Modernos:
+   - Header: Verde (#6cb83b) → Marrom (#8b6f47)
+   - Footer: Marrom (#8b6f47) → Verde (#6cb83b)
+   - Efeito visual impactante
+
+═══════════════════════════════════════════════════════════════
+    IMPORTANTE
+═══════════════════════════════════════════════════════════════
+
+⚠️ Use o arquivo news-soberano.zip ATUALIZADO
+⚠️ As cores podem ser ajustadas depois via Customizer
+⚠️ Mas as cores atuais já combinam com a logo!
+
+═══════════════════════════════════════════════════════════════
+
+Atualização realizada: Dezembro 2025
+Baseado na logo oficial do Jornal Campo Soberano
+
+Agora o tema está 100% alinhado com a identidade visual! 🎨✅

@@ -1,0 +1,197 @@
+═══════════════════════════════════════════════════════════════
+    ⚠️ SOLUÇÃO: IMAGENS NÃO APARECEM NO SITE
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA IDENTIFICADO:
+   O WP Rocket está com lazy loading MUITO agressivo, impedindo
+   que as imagens carreguem mesmo quando estão no código HTML.
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO 1: DESATIVAR LAZY LOAD DO WP ROCKET (RECOMENDADO)
+═══════════════════════════════════════════════════════════════
+
+1. Login no WordPress
+2. Plugins → WP Rocket → Configurações
+3. Aba "Mídia"
+4. DESMARCAR:
+   ☐ Enable LazyLoad for images
+   ☐ Enable for iframes and videos
+5. Salvar alterações
+6. Ir em WP Rocket → Limpar Cache
+7. CTRL+F5 no navegador
+
+RESULTADO: Imagens aparecerão imediatamente ✅
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO 2: REGENERAR MINIATURAS
+═══════════════════════════════════════════════════════════════
+
+As miniaturas podem não ter sido geradas nos novos tamanhos:
+
+1. Instalar plugin "Regenerate Thumbnails"
+   WordPress → Plugins → Adicionar novo
+   Buscar: "Regenerate Thumbnails"
+   Instalar e Ativar
+
+2. Ferramentas → Regen. Thumbnails
+3. Clicar em "Regenerate All Thumbnails"
+4. Aguardar processar (pode demorar)
+5. Limpar cache WP Rocket
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO 3: VERIFICAR PERMISSÕES DE ARQUIVOS
+═══════════════════════════════════════════════════════════════
+
+Via FTP/Painel Hostinger:
+
+1. Acessar: /wp-content/uploads/
+2. Verificar permissões:
+   - Pastas: 755
+   - Arquivos: 644
+3. Se diferentes, corrigir recursivamente
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO 4: LIMPAR TODOS OS CACHES
+═══════════════════════════════════════════════════════════════
+
+1. WP Rocket:
+   - Limpar Cache
+   - Pré-carregar Cache
+
+2. Navegador:
+   - CTRL+SHIFT+DELETE
+   - Limpar cache e cookies
+   - OU abrir em aba anônima
+
+3. Hostinger (se tiver cache):
+   - Painel Hostinger
+   - Cache → Limpar
+
+4. CDN Cloudflare (se usar):
+   - Development Mode: ON
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO 5: DESATIVAR LAZY LOAD DO TEMA
+═══════════════════════════════════════════════════════════════
+
+Temporariamente desativar nosso lazy load:
+
+1. Ir em: Aparência → Editor de Temas
+2. Arquivo: functions.php
+3. Localizar linha (~185):
+
+   wp_enqueue_script(
+       'news-soberano-lazyload',
+       NEWS_SOBERANO_URI . '/assets/js/lazyload.js',
+       array(),
+       NEWS_SOBERANO_VERSION,
+       true
+   );
+
+4. COMENTAR essas linhas (adicionar // no início):
+
+   // wp_enqueue_script(
+   //     'news-soberano-lazyload',
+   //     NEWS_SOBERANO_URI . '/assets/js/lazyload.js',
+   //     array(),
+   //     NEWS_SOBERANO_VERSION,
+   //     true
+   // );
+
+5. Salvar
+6. Limpar cache
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO 6: FORÇAR CARREGAMENTO DE IMAGENS (CÓDIGO)
+═══════════════════════════════════════════════════════════════
+
+Adicionar no functions.php (final do arquivo):
+
+/**
+ * Desativar lazy load do WP Rocket para imagens destacadas
+ */
+add_filter('rocket_lazyload_excluded_src', function($attributes) {
+    $attributes[] = 'wp-content/uploads';
+    return $attributes;
+});
+
+// Desativar lazy load nativo do WordPress
+add_filter('wp_lazy_loading_enabled', '__return_false');
+
+═══════════════════════════════════════════════════════════════
+    ✅ ORDEM DE EXECUÇÃO RECOMENDADA
+═══════════════════════════════════════════════════════════════
+
+FAÇA NESTA ORDEM:
+
+1. ✅ SOLUÇÃO 1: Desativar LazyLoad WP Rocket
+   → Mais rápido e efetivo
+
+2. ✅ SOLUÇÃO 4: Limpar todos os caches
+   → Garantir que mudanças apareçam
+
+3. ✅ SOLUÇÃO 2: Regenerar miniaturas
+   → Se ainda não aparecer
+
+4. ✅ SOLUÇÃO 6: Código de exclusão
+   → Se ainda persistir
+
+═══════════════════════════════════════════════════════════════
+    🎯 TESTE APÓS CADA SOLUÇÃO
+═══════════════════════════════════════════════════════════════
+
+1. Limpar cache WP Rocket
+2. Abrir navegador em aba anônima
+3. Acessar: jornal.camposoberano.com.br
+4. Verificar se imagens aparecem
+5. CTRL+F5 para forçar reload
+
+═══════════════════════════════════════════════════════════════
+    📊 DIAGNÓSTICO TÉCNICO
+═══════════════════════════════════════════════════════════════
+
+O QUE ENCONTRAMOS:
+✅ Tags <img> existem no HTML
+✅ Atributos src estão corretos
+✅ Caminhos das imagens válidos
+✅ Formato WebP correto
+❌ WP Rocket com "RocketLazyLoadScripts" ATIVO
+❌ data-rocket-src ao invés de src direto
+❌ Lazy loading impedindo carregamento
+
+CONCLUSÃO:
+   As imagens EXISTEM no código, mas o WP Rocket está
+   impedindo que carreguem devido ao lazy load agressivo.
+
+═══════════════════════════════════════════════════════════════
+    💡 SOLUÇÃO RÁPIDA (30 SEGUNDOS)
+═══════════════════════════════════════════════════════════════
+
+SE ESTIVER COM PRESSA:
+
+1. WP-Admin → Plugins → WP Rocket → Desativar
+2. Recarregar site (CTRL+F5)
+3. Imagens devem aparecer IMEDIATAMENTE
+4. Se aparecerem: Reativar WP Rocket e fazer SOLUÇÃO 1
+
+═══════════════════════════════════════════════════════════════
+    🔍 COMO VERIFICAR SE FUNCIONOU
+═══════════════════════════════════════════════════════════════
+
+Abra o site e:
+
+1. Veja se as imagens aparecem imediatamente
+2. Inspecionar elemento (F12)
+3. Console não deve ter erros 404
+4. Network deve mostrar imagens carregando
+5. Todas as seções devem ter imagens visíveis
+
+═══════════════════════════════════════════════════════════════
+
+Data: 11 de Dezembro de 2025
+Problema: Lazy Loading bloqueando imagens
+Solução: Desativar LazyLoad do WP Rocket
+
+⚡ Execute a SOLUÇÃO 1 primeiro - é a mais efetiva!
+
+═══════════════════════════════════════════════════════════════

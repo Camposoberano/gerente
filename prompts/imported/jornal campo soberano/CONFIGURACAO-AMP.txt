@@ -1,0 +1,300 @@
+═══════════════════════════════════════════════════════════════
+    ⚡ GUIA COMPLETO: CONFIGURAÇÃO AMP
+    NEWS SOBERANO v1.3.2
+═══════════════════════════════════════════════════════════════
+
+🎯 OBJETIVO:
+   Corrigir erros AMP e fazer o site passar na validação Google
+
+═══════════════════════════════════════════════════════════════
+    ❌ PROBLEMAS IDENTIFICADOS
+═══════════════════════════════════════════════════════════════
+
+1. ❌ WP Rocket bloqueando AMP (RocketLazyLoadScripts)
+2. ❌ Scripts JavaScript incompatíveis
+3. ❌ CSS inline excedendo 75KB
+4. ❌ Google Analytics não usando amp-analytics
+5. ❌ Imagens sem atributos layout/width/height
+6. ❌ Widgets incompatíveis no AMP
+
+═══════════════════════════════════════════════════════════════
+    ✅ CORREÇÕES APLICADAS NO TEMA v1.3.2
+═══════════════════════════════════════════════════════════════
+
+Adicionado no functions.php (linhas 588-643):
+
+✅ Desabilita WP Rocket no AMP
+✅ Remove lazy load no AMP
+✅ Limpa sidebar no AMP
+✅ Remove scripts incompatíveis
+✅ Sanitiza CSS inline
+✅ Adiciona dimensões automáticas em imagens
+✅ Remove fontes externas excessivas
+
+═══════════════════════════════════════════════════════════════
+    🔧 CONFIGURAÇÃO DO PLUGIN AMP
+═══════════════════════════════════════════════════════════════
+
+PASSO 1: Verificar Plugin AMP
+──────────────────────────────────────────────────────────────
+
+1. WordPress → Plugins
+2. Verificar se "AMP" está instalado e ativo
+3. Se não estiver:
+   - Plugins → Adicionar Novo
+   - Buscar: "AMP"
+   - Instalar "AMP" by AMP Project Contributors
+   - Ativar
+
+PASSO 2: Configurar Modo AMP
+──────────────────────────────────────────────────────────────
+
+1. WordPress → AMP → Settings
+2. Escolher modo: "Paired" (RECOMENDADO)
+
+   ┌─────────────────────────────────────┐
+   │ ◉ Paired                            │
+   │   Usa URLs separadas (/amp/)        │
+   │   Mantém site normal funcionando    │
+   │   RECOMENDADO para News Soberano    │
+   │                                     │
+   │ ○ Transitional                      │
+   │ ○ Standard                          │
+   └─────────────────────────────────────┘
+
+3. Salvar alterações
+
+PASSO 3: Configurar Tipos de Conteúdo
+──────────────────────────────────────────────────────────────
+
+1. Aba "Supported Templates"
+2. Marcar:
+   ☑ Posts
+   ☑ Pages
+   ☑ Categories
+   ☑ Tags
+   ☑ Authors
+   ☑ Archives
+
+3. Salvar
+
+PASSO 4: Configurar Analytics (Opcional)
+──────────────────────────────────────────────────────────────
+
+1. Aba "Analytics"
+2. Adicionar:
+   - Type: Google Analytics
+   - Account ID: UA-XXXXXXXX-X ou G-XXXXXXXXXX
+
+3. Salvar
+
+═══════════════════════════════════════════════════════════════
+    🔧 CONFIGURAÇÃO WP ROCKET PARA AMP
+═══════════════════════════════════════════════════════════════
+
+IMPORTANTE: WP Rocket não deve processar páginas AMP!
+
+1. WP Rocket → Configurações
+2. Aba "Avançado"
+3. Seção "URLs to not cache"
+4. Adicionar:
+   /amp/
+   ?amp=1
+   ?amp
+   /*/amp/
+
+5. Aba "Otimização de Arquivos"
+6. DESMARCAR para AMP:
+   ☐ Minify CSS files
+   ☐ Minify JavaScript files
+   ☐ Combine JavaScript files (AMP)
+
+7. Salvar e limpar cache
+
+═══════════════════════════════════════════════════════════════
+    🧪 TESTE DE VALIDAÇÃO AMP
+═══════════════════════════════════════════════════════════════
+
+MÉTODO 1: Validador Google AMP
+──────────────────────────────────────────────────────────────
+
+1. Acesse: https://validator.ampproject.org/
+2. Cole URL: https://jornal.camposoberano.com.br/[POST]/?amp=1
+3. Clicar "Validate"
+4. Verificar erros (deve ser 0)
+
+MÉTODO 2: Console do Navegador
+──────────────────────────────────────────────────────────────
+
+1. Abrir Chrome
+2. Acessar: https://jornal.camposoberano.com.br/?amp=1#development=1
+3. Abrir DevTools (F12)
+4. Console deve mostrar:
+   ✅ "AMP validation successful"
+
+MÉTODO 3: Ferramenta Google Search Console
+──────────────────────────────────────────────────────────────
+
+1. Google Search Console
+2. Experiência → AMP
+3. Verificar páginas sem erros
+
+═══════════════════════════════════════════════════════════════
+    🔍 VERIFICAÇÃO MANUAL
+═══════════════════════════════════════════════════════════════
+
+Após instalar v1.3.2, verificar:
+
+1. ✅ Acesse: jornal.camposoberano.com.br/?amp=1
+2. ✅ Página carrega rápido (< 1s)
+3. ✅ Sem erros no console (F12)
+4. ✅ Imagens aparecem
+5. ✅ Layout limpo e responsivo
+6. ✅ Botão "View non-AMP version" funciona
+7. ✅ Links funcionam
+8. ✅ Sem scripts bloqueados
+
+═══════════════════════════════════════════════════════════════
+    📊 DIAGNÓSTICO DE ERROS
+═══════════════════════════════════════════════════════════════
+
+Se ainda houver erros, verificar:
+
+ERRO: "The tag 'script' is disallowed"
+SOLUÇÃO:
+   → Desabilitar plugins que adicionam scripts
+   → Verificar WP Rocket configurado corretamente
+   → Tema v1.3.2 resolve automaticamente
+
+ERRO: "CSS syntax error in tag 'style amp-custom'"
+SOLUÇÃO:
+   → CSS excede 75KB
+   → Tema v1.3.2 remove CSS desnecessário no AMP
+   → Verificar plugins adicionando CSS
+
+ERRO: "The attribute 'src' in tag 'amp-img' is missing"
+SOLUÇÃO:
+   → Imagens sem atributos corretos
+   → Tema v1.3.2 adiciona automaticamente
+   → Regenerar miniaturas se necessário
+
+ERRO: "The mandatory attribute 'layout' is missing"
+SOLUÇÃO:
+   → Tema v1.3.2 adiciona layout="responsive"
+   → Sanitizadores AMP corrigem automaticamente
+
+═══════════════════════════════════════════════════════════════
+    ⚙️ OTIMIZAÇÕES ADICIONAIS
+═══════════════════════════════════════════════════════════════
+
+PERFORMANCE AMP:
+
+1. Imagens WebP (já implementado)
+2. Lazy load desabilitado no AMP (correto)
+3. CSS minificado e inline < 75KB
+4. Fontes otimizadas
+5. Scripts removidos
+6. Sidebar removida no AMP
+
+RECURSOS AMP DISPONÍVEIS:
+
+✅ amp-img (imagens responsivas)
+✅ amp-analytics (Google Analytics)
+✅ amp-social-share (compartilhamento)
+✅ Schema.org NewsArticle
+✅ Open Graph metadata
+✅ Twitter Cards
+
+═══════════════════════════════════════════════════════════════
+    📱 TESTE EM DISPOSITIVOS
+═══════════════════════════════════════════════════════════════
+
+DESKTOP:
+   Chrome → F12 → Toggle Device Toolbar
+   Simular iPhone/Galaxy
+   URL: /?amp=1
+
+MOBILE REAL:
+   Abrir navegador mobile
+   Acessar versão AMP
+   Verificar velocidade
+
+GOOGLE:
+   Buscar site no Google
+   Clicar resultado (pode ser AMP)
+   Ícone ⚡ indica AMP ativo
+
+═══════════════════════════════════════════════════════════════
+    ✅ CHECKLIST PÓS-CONFIGURAÇÃO
+═══════════════════════════════════════════════════════════════
+
+CONFIGURAÇÃO:
+☐ Plugin AMP instalado e ativo
+☐ Modo "Paired" selecionado
+☐ Templates habilitados
+☐ WP Rocket configurado para ignorar AMP
+☐ Cache limpo
+
+VALIDAÇÃO:
+☐ Validator AMP: 0 erros
+☐ Console: "AMP validation successful"
+☐ Search Console: Sem erros AMP
+☐ Teste manual: Página carrega corretamente
+
+PERFORMANCE:
+☐ Velocidade < 1s
+☐ Imagens carregando
+☐ Layout responsivo
+☐ Sem scripts bloqueados
+
+═══════════════════════════════════════════════════════════════
+    🆘 SOLUÇÃO DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA: AMP não funciona
+SOLUÇÃO:
+   1. Verificar plugin AMP ativo
+   2. Limpar cache WordPress
+   3. Limpar cache WP Rocket
+   4. Desativar outros plugins temporariamente
+   5. Testar com tema v1.3.2
+
+PROBLEMA: Muitos erros de validação
+SOLUÇÃO:
+   1. Instalar tema v1.3.2 (correções automáticas)
+   2. Configurar WP Rocket corretamente
+   3. Desabilitar plugins conflitantes
+   4. Usar modo "Paired" (não Standard)
+
+PROBLEMA: CSS syntax error
+SOLUÇÃO:
+   1. Tema v1.3.2 reduz CSS inline
+   2. Verificar plugins adicionando CSS
+   3. Usar Paired mode (não injeta todo CSS)
+
+═══════════════════════════════════════════════════════════════
+    📚 RECURSOS ADICIONAIS
+═══════════════════════════════════════════════════════════════
+
+Documentação:
+• https://amp.dev/documentation/
+• https://amp-wp.org/documentation/
+
+Validador:
+• https://validator.ampproject.org/
+
+Teste Google:
+• https://search.google.com/test/amp
+
+Support:
+• https://wordpress.org/support/plugin/amp/
+
+═══════════════════════════════════════════════════════════════
+
+Data: 11 de Dezembro de 2025
+Versão: 1.3.2
+Correções AMP aplicadas ✅
+
+⚡ Instale v1.3.2 e siga este guia passo a passo!
+
+═══════════════════════════════════════════════════════════════

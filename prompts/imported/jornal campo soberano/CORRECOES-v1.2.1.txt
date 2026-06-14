@@ -1,0 +1,164 @@
+═══════════════════════════════════════════════════════════════
+    ✅ CORREÇÕES IMPLEMENTADAS - v1.2.1
+═══════════════════════════════════════════════════════════════
+
+Data: 11 de Dezembro de 2025
+Versão: 1.2.0 → 1.2.1 (Patch)
+
+═══════════════════════════════════════════════════════════════
+    🐛 PROBLEMAS CORRIGIDOS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA 1: Imagens em destaque não apareciam
+SOLUÇÃO:
+   ✅ Sistema de placeholder SVG implementado
+   ✅ Nova função news_soberano_get_thumbnail()
+   ✅ Imagens sempre aparecem (real ou placeholder)
+   ✅ Todas as 5 seções da homepage atualizadas
+
+PROBLEMA 2: Seção "Últimas Notícias" com erro visual
+SOLUÇÃO:
+   ✅ CSS aprimorado para exibição de imagens
+   ✅ Suporte SVG adicionado
+   ✅ Layout consistente garantido
+   ✅ Funciona perfeitamente agora
+
+═══════════════════════════════════════════════════════════════
+    📦 ARQUIVO PARA INSTALAÇÃO
+═══════════════════════════════════════════════════════════════
+
+   📁 news-soberano-v1.2.1.zip (54 KB)
+   📍 Localização: E:\jornal campo soberano\
+   🕐 Criado: 11/12/2025 às 03:18
+
+   → ESTE É O ARQUIVO CORRIGIDO!
+
+═══════════════════════════════════════════════════════════════
+    ⚡ INSTALAÇÃO RÁPIDA
+═══════════════════════════════════════════════════════════════
+
+1. Acesse WordPress → Aparência → Temas
+2. Clique em "Adicionar Novo" → "Enviar Tema"
+3. Escolha: news-soberano-v1.2.1.zip
+4. Clique "Instalar Agora"
+5. Clique "Ativar"
+6. Limpe o cache (WP Rocket)
+7. Verifique a homepage
+
+TEMPO: 2-3 minutos
+RISCO: Muito baixo (só correções)
+
+═══════════════════════════════════════════════════════════════
+    🎯 O QUE FOI FEITO
+═══════════════════════════════════════════════════════════════
+
+ARQUIVOS MODIFICADOS:
+
+1. functions.php
+   • Adicionada função news_soberano_get_thumbnail()
+   • Gera placeholder SVG quando não há imagem
+   • Suporta 4 tamanhos diferentes
+
+2. front-page.php
+   • Hero Section: Sempre mostra imagem
+   • Grid Lateral: Sempre mostra imagem
+   • Não Perca: Sempre mostra imagem
+   • Vídeos: Sempre mostra imagem
+   • Últimas Notícias: Sempre mostra imagem
+
+3. assets/css/homepage-layout.css
+   • Estilos para placeholder
+   • Suporte SVG em todas as seções
+   • Display correto de imagens
+
+4. style.css, VERSION.txt, CHANGELOG.md
+   • Versão atualizada para 1.2.1
+   • Documentação atualizada
+
+═══════════════════════════════════════════════════════════════
+    🖼️ COMO FUNCIONA O PLACEHOLDER
+═══════════════════════════════════════════════════════════════
+
+QUANDO POST NÃO TEM IMAGEM:
+
+ANTES (v1.2.0):
+   [ ESPAÇO VAZIO ]  ❌ Nada aparece
+
+DEPOIS (v1.2.1):
+   ┌──────────────────┐
+   │                  │
+   │   Sem imagem     │  ✅ Placeholder elegante
+   │                  │
+   └──────────────────┘
+
+• Cor: Cinza claro (#e5e7eb)
+• Texto: "Sem imagem"
+• Tamanho: Adapta à seção
+• Peso: ~0.2 KB (muito leve)
+
+═══════════════════════════════════════════════════════════════
+    ✨ RESULTADO FINAL
+═══════════════════════════════════════════════════════════════
+
+ANTES:
+   ❌ Imagens não apareciam em posts sem destaque
+   ❌ Últimas notícias com erro visual
+   ❌ Layout inconsistente
+
+AGORA:
+   ✅ Todas as imagens sempre aparecem
+   ✅ Últimas notícias funcionando perfeitamente
+   ✅ Layout profissional e consistente
+   ✅ Melhor experiência do usuário
+
+═══════════════════════════════════════════════════════════════
+    📊 COMPATIBILIDADE
+═══════════════════════════════════════════════════════════════
+
+   ✅ 100% compatível com v1.2.0
+   ✅ Nenhuma configuração necessária
+   ✅ Funciona imediatamente após ativar
+   ✅ Não afeta posts ou configurações existentes
+   ✅ Todas as funcionalidades anteriores mantidas
+
+═══════════════════════════════════════════════════════════════
+    🎉 PRÓXIMOS PASSOS
+═══════════════════════════════════════════════════════════════
+
+RECOMENDAÇÃO:
+   → Instale a v1.2.1 imediatamente
+   → Problemas corrigidos
+   → Zero risco
+   → Atualização em 2-3 minutos
+
+TESTE APÓS INSTALAÇÃO:
+   1. ✅ Verificar homepage
+   2. ✅ Ver se imagens aparecem
+   3. ✅ Verificar seção "Últimas Notícias"
+   4. ✅ Testar no celular (responsivo)
+   5. ✅ Limpar cache
+
+MELHORIAS FUTURAS PLANEJADAS:
+   • v1.3.0: Novas funcionalidades
+   • Newsletter integrada
+   • Mais widgets
+   • Sistema de notificações
+
+═══════════════════════════════════════════════════════════════
+    📚 DOCUMENTAÇÃO
+═══════════════════════════════════════════════════════════════
+
+   📖 RELEASE-NOTES-v1.2.1.txt - Detalhes completos
+   📋 CHANGELOG.md - Histórico de versões
+   📝 VERSION.txt - Informações de versão
+   ✅ Este arquivo - Resumo das correções
+
+═══════════════════════════════════════════════════════════════
+
+Desenvolvido para: Jornal Campo Soberano
+Versão: 1.2.1 "Correção de Imagens"
+Data: 11 de Dezembro de 2025
+
+🐛 Problemas corrigidos! Pronto para instalar! 🚀
+
+═══════════════════════════════════════════════════════════════

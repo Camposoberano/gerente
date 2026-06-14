@@ -1,0 +1,16 @@
+node_modules
+.git
+.env
+.agents
+.codex
+.cursor
+.claude
+logs
+output
+outputs
+scratch
+SECRETS.md
+*.log
+*.pem
+*.key
+*.pub

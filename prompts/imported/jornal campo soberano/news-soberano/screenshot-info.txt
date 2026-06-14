@@ -1,0 +1,18 @@
+IMPORTANTE: Adicionar Screenshot do Tema
+
+Para que o tema apareça corretamente no painel WordPress, você precisa adicionar um arquivo screenshot.png na raiz do tema.
+
+Especificações:
+- Nome: screenshot.png
+- Tamanho: 1200x900 pixels (recomendado)
+- Formato: PNG
+- Conteúdo: Captura de tela da página inicial do tema
+
+Como criar:
+1. Após instalar e ativar o tema
+2. Configure o logo, menu e adicione algumas notícias
+3. Tire um print da tela da homepage
+4. Redimensione para 1200x900px
+5. Salve como screenshot.png na pasta do tema
+
+Isso fará com que uma prévia visual apareça em Aparência > Temas

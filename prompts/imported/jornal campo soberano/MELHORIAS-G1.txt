@@ -1,0 +1,209 @@
+═══════════════════════════════════════════════════════════════
+    MELHORIAS ESTILO G1 - NEWS SOBERANO
+═══════════════════════════════════════════════════════════════
+
+✅ TEMA ATUALIZADO COM DESIGN INSPIRADO NO G1!
+
+═══════════════════════════════════════════════════════════════
+    NOVOS COMPONENTES ADICIONADOS
+═══════════════════════════════════════════════════════════════
+
+🔴 BARRA DE ÚLTIMAS NOTÍCIAS (Breaking News Bar)
+   ✅ Localização: Logo abaixo do header
+   ✅ Exibe últimas 5 notícias em rotação automática
+   ✅ Fundo vermelho característico do G1
+   ✅ Timestamps relativos (há X minutos)
+   ✅ Animação suave de rolagem
+   ✅ Arquivo: template-parts/breaking-news.php
+
+📰 SEÇÕES POR CATEGORIA
+   ✅ Localização: Abaixo do grid principal de notícias
+   ✅ Agrupa notícias por categorias
+   ✅ Cores diferentes para cada categoria
+   ✅ Layout especial: 1 post grande + 3 posts pequenos
+   ✅ Link "Ver tudo" para cada categoria
+   ✅ Arquivo: template-parts/category-sections.php
+
+⏰ TIMESTAMPS RELATIVOS
+   ✅ Exibe "há X minutos", "há X horas", "há X dias"
+   ✅ Exatamente como no G1
+   ✅ Função: news_soberano_time_ago()
+   ✅ Usado em toda navegação de notícias
+
+📊 WIDGET MAIS LIDAS COM NUMERAÇÃO
+   ✅ Números grandes ao lado de cada notícia
+   ✅ Top 3 com cor verde destacada
+   ✅ Opções de período (24h, 7 dias, 30 dias, todos)
+   ✅ Nome: "Mais Lidas (G1 Style)"
+   ✅ Arquivo: inc/widgets/most-read-widget.php
+
+🎬 BADGES DE POST (VÍDEO, AO VIVO, URGENTE)
+   ✅ Badge "VÍDEO" com ícone de play
+   ✅ Badge "AO VIVO" com animação pulsante
+   ✅ Badge "URGENTE" em laranja
+   ✅ Aparece sobre imagens dos posts
+   ✅ CSS: Já incluído no g1-style.css
+
+═══════════════════════════════════════════════════════════════
+    MELHORIAS NO LAYOUT
+═══════════════════════════════════════════════════════════════
+
+✨ HOMEPAGE RENOVADA:
+   1. Breaking News Bar (topo)
+   2. Notícia em Destaque (grande)
+   3. Grid de Notícias (3 colunas)
+   4. Seções por Categoria (6 seções)
+   5. Sidebar com Mais Lidas
+
+✨ VISUAL MAIS PRÓXIMO DO G1:
+   - Títulos mais bold
+   - Cores por categoria
+   - Timestamps relativos
+   - Mais densidade de informação
+   - Separadores visuais marcantes
+
+═══════════════════════════════════════════════════════════════
+    ARQUIVOS CRIADOS/MODIFICADOS
+═══════════════════════════════════════════════════════════════
+
+📁 NOVOS ARQUIVOS:
+   ✅ assets/css/g1-style.css (CSS do estilo G1)
+   ✅ template-parts/breaking-news.php
+   ✅ template-parts/category-sections.php
+   ✅ inc/widgets/most-read-widget.php
+
+📝 ARQUIVOS MODIFICADOS:
+   ✅ index.php (adiciona componentes G1)
+   ✅ functions.php (carrega CSS e widget)
+   ✅ inc/template-tags.php (função timestamp)
+
+═══════════════════════════════════════════════════════════════
+    COMO USAR OS NOVOS RECURSOS
+═══════════════════════════════════════════════════════════════
+
+🔴 BREAKING NEWS BAR:
+   → Automático na homepage
+   → Mostra últimas 5 notícias
+   → Nenhuma configuração necessária
+
+📰 SEÇÕES POR CATEGORIA:
+   → Automático na homepage
+   → Exibe 6 categorias principais
+   → Baseado em número de posts
+
+📊 WIDGET "MAIS LIDAS":
+   1. Vá em: Aparência → Widgets
+   2. Arraste "Mais Lidas (G1 Style)" para Sidebar
+   3. Configure:
+      - Título: "Mais Lidas"
+      - Número: 10 posts
+      - Período: Últimos 7 dias (ou outro)
+   4. Salvar
+
+🎬 BADGES DE POST:
+   Para adicionar badge de VÍDEO:
+   1. Edite o post
+   2. Em "Formato", escolha "Vídeo"
+   3. Publique
+   → Badge aparecerá automaticamente!
+
+⏰ TIMESTAMPS:
+   → Automático em todos os posts
+   → Nenhuma configuração necessária
+
+═══════════════════════════════════════════════════════════════
+    CORES POR CATEGORIA (PERSONALIZE!)
+═══════════════════════════════════════════════════════════════
+
+Você pode definir cores customizadas para cada categoria:
+
+1. Vá em: Posts → Categorias
+2. Edite uma categoria
+3. Role até "Campos Personalizados"
+4. Adicione:
+   - Nome: category_color
+   - Valor: #e74c3c (ou outra cor HEX)
+5. Atualizar
+
+Cores padrão automáticas:
+   🔴 Vermelho: #e74c3c
+   🔵 Azul: #3498db
+   🟢 Verde: #2ecc71
+   🟠 Laranja: #f39c12
+   🟣 Roxo: #9b59b6
+   🔷 Ciano: #1abc9c
+
+═══════════════════════════════════════════════════════════════
+    RESPONSIVIDADE
+═══════════════════════════════════════════════════════════════
+
+✅ Breaking News: Adaptável mobile (esconde label em telas pequenas)
+✅ Seções de Categoria: Grid vira 1 coluna no mobile
+✅ Widget Mais Lidas: Funciona perfeitamente em qualquer tamanho
+✅ Badges: Responsivos e legíveis
+
+═══════════════════════════════════════════════════════════════
+    PERFORMANCE
+═══════════════════════════════════════════════════════════════
+
+✅ CSS otimizado e minificável
+✅ Queries eficientes (apenas posts necessários)
+✅ Lazy loading mantido
+✅ Cache-friendly (WP Rocket compatível)
+✅ Sem JavaScript adicional (usa CSS puro)
+
+═══════════════════════════════════════════════════════════════
+    COMPARAÇÃO COM G1 OFICIAL
+═══════════════════════════════════════════════════════════════
+
+📊 ELEMENTOS IMPLEMENTADOS:
+
+✅ Breaking news bar vermelha no topo
+✅ Timestamps relativos (há X minutos)
+✅ Seções por categoria coloridas
+✅ Widget "Mais Lidas" com numeração
+✅ Badges (VÍDEO, AO VIVO)
+✅ Layout denso de informação
+✅ Grid responsivo de notícias
+✅ Cores distintas por seção
+
+🎯 RESULTADO:
+
+   "Tema agora captura a essência visual do G1"
+
+   ✓ Profissional
+   ✓ Denso
+   ✓ Informativo
+   ✓ Organizado
+   ✓ Reconhecível
+
+═══════════════════════════════════════════════════════════════
+    PRÓXIMOS PASSOS APÓS INSTALAÇÃO
+═══════════════════════════════════════════════════════════════
+
+1. ✅ Instalar/atualizar o tema
+2. ✅ Adicionar widget "Mais Lidas" na sidebar
+3. ✅ Criar categorias principais
+4. ✅ Publicar posts com imagens destacadas
+5. ✅ Definir formato "Vídeo" para posts com vídeo
+6. ✅ (Opcional) Definir cores customizadas para categorias
+7. ✅ Limpar cache (WP Rocket)
+8. ✅ Testar no mobile
+
+═══════════════════════════════════════════════════════════════
+    SUPORTE
+═══════════════════════════════════════════════════════════════
+
+📖 Documentação completa em: INSTRUCOES-DE-INSTALACAO.md
+✅ Checklist pós-instalação: CHECKLIST-POS-INSTALACAO.txt
+🎨 Cores atualizadas: CORES-ATUALIZADAS.txt
+
+═══════════════════════════════════════════════════════════════
+
+Tema News Soberano v1.0.0 - Estilo G1
+Desenvolvido para Jornal Campo Soberano
+Dezembro 2025
+
+Design moderno • Performance otimizada • SEO pronto • AMP completo
+
+Agora com visual 100% inspirado no G1! 🎉🚀

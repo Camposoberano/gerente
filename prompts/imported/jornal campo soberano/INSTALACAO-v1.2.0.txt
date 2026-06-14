@@ -1,0 +1,222 @@
+═══════════════════════════════════════════════════════════════
+    NEWS SOBERANO v1.2.0 - "HOMEPAGE COMPLETA"
+    GUIA RÁPIDO DE INSTALAÇÃO
+═══════════════════════════════════════════════════════════════
+
+✅ VERSÃO FINAL PRONTA PARA INSTALAÇÃO!
+
+Data: 11 de Dezembro de 2025
+Versão: 1.2.0 "Homepage Completa"
+Arquivo: news-soberano-v1.2.0.zip
+
+═══════════════════════════════════════════════════════════════
+    📦 ARQUIVO PARA UPLOAD
+═══════════════════════════════════════════════════════════════
+
+ARQUIVO CORRETO:
+   📁 news-soberano-v1.2.0.zip
+   📍 Localização: E:\jornal campo soberano\
+
+TAMANHO: Aproximadamente 100-200 KB
+
+═══════════════════════════════════════════════════════════════
+    🚀 PASSO A PASSO - INSTALAÇÃO NO HOSTINGER
+═══════════════════════════════════════════════════════════════
+
+PASSO 1: BACKUP (IMPORTANTE!)
+──────────────────────────────────────────────────────────────
+   1. Acesse o Painel Hostinger
+   2. WordPress → Backups
+   3. Criar backup completo
+   4. Aguardar conclusão
+
+PASSO 2: DESATIVAR CACHE
+──────────────────────────────────────────────────────────────
+   1. Login no WordPress (jornal.camposoberano.com.br/wp-admin)
+   2. Plugins → WP Rocket
+   3. Clicar em "Limpar Cache"
+   4. Desativar temporariamente
+
+PASSO 3: UPLOAD DO TEMA
+──────────────────────────────────────────────────────────────
+   1. WordPress → Aparência → Temas
+   2. Clicar em "Adicionar Novo"
+   3. Clicar em "Enviar Tema"
+   4. Escolher arquivo: news-soberano-v1.2.0.zip
+   5. Clicar "Instalar Agora"
+   6. Aguardar upload e instalação
+
+PASSO 4: ATIVAR O TEMA
+──────────────────────────────────────────────────────────────
+   1. Após instalação, clicar "Ativar"
+   2. Tema será ativado automaticamente
+   3. Aguardar confirmação
+
+PASSO 5: VERIFICAR HOMEPAGE
+──────────────────────────────────────────────────────────────
+   1. Visitar: jornal.camposoberano.com.br
+   2. Verificar novo layout com 6 seções:
+      ✅ Hero Section (notícia grande)
+      ✅ Grid lateral (4 notícias)
+      ✅ Seção "Não Perca"
+      ✅ Seção Vídeos
+      ✅ Últimas Notícias
+   3. Verificar se está responsivo (mobile)
+
+PASSO 6: REATIVAR CACHE
+──────────────────────────────────────────────────────────────
+   1. Plugins → WP Rocket
+   2. Reativar se desativou
+   3. Limpar cache novamente
+   4. Configurações → Performance → Save
+
+═══════════════════════════════════════════════════════════════
+    🎯 O QUE ESPERAR APÓS INSTALAÇÃO
+═══════════════════════════════════════════════════════════════
+
+HOMEPAGE NOVA:
+   ✅ Layout profissional estilo grandes portais
+   ✅ Hero Section com notícia principal
+   ✅ Grid de 4 notícias secundárias
+   ✅ Seção "Não Perca" com 6 posts
+   ✅ Seção Vídeos com ícones de play
+   ✅ Lista de últimas 10 notícias
+   ✅ Breaking News bar (barra vermelha)
+   ✅ Sidebar com widgets
+
+COMPATIBILIDADE:
+   ✅ Todos os posts anteriores preservados
+   ✅ Configurações mantidas
+   ✅ Widgets preservados
+   ✅ WP Rocket funcionando
+   ✅ Rank Math funcionando
+   ✅ AMP funcionando
+
+═══════════════════════════════════════════════════════════════
+    ⚙️ CONFIGURAÇÕES OPCIONAIS
+═══════════════════════════════════════════════════════════════
+
+MARCAR POST COMO HERO (OPCIONAL):
+──────────────────────────────────────────────────────────────
+Para escolher qual notícia aparece GRANDE na homepage:
+
+   1. Edite o post desejado
+   2. Role até "Campos Personalizados" (Custom Fields)
+   3. Clique em "Adicionar novo campo"
+   4. Nome: _is_ns_featured
+   5. Valor: 1
+   6. Clicar "Adicionar Campo Personalizado"
+   7. Atualizar post
+
+   → Este post aparecerá como Hero na homepage
+
+NOTA: Se não marcar nenhum, o post mais recente será o Hero.
+
+POSTS DE VÍDEO (OPCIONAL):
+──────────────────────────────────────────────────────────────
+Para posts aparecerem na seção Vídeos:
+
+   1. Edite o post
+   2. No lado direito, procure "Formato"
+   3. Selecione "Vídeo"
+   4. Atualizar post
+
+   → Post aparecerá na seção Vídeos com ícone de play
+
+═══════════════════════════════════════════════════════════════
+    🎨 CORES DO TEMA
+═══════════════════════════════════════════════════════════════
+
+Verde: #6cb83b (do logo)
+Marrom: #8b6f47 (do logo)
+
+As cores já estão configuradas automaticamente!
+
+═══════════════════════════════════════════════════════════════
+    📱 TESTE RESPONSIVO
+═══════════════════════════════════════════════════════════════
+
+Após instalação, testar em:
+
+   📱 Mobile (celular)
+   📱 Tablet (iPad)
+   💻 Desktop (computador)
+
+Para testar mobile no desktop:
+   - Pressione F12 no Chrome
+   - Clique no ícone de celular
+   - Escolha iPhone ou Galaxy
+
+═══════════════════════════════════════════════════════════════
+    🔧 SOLUÇÃO DE PROBLEMAS
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA: Homepage não mudou
+SOLUÇÃO:
+   → Limpar cache do WP Rocket
+   → Limpar cache do navegador (Ctrl+F5)
+   → Verificar se tema está ativado
+
+PROBLEMA: Imagens não aparecem
+SOLUÇÃO:
+   → Posts precisam ter "Imagem Destacada"
+   → Editar post → Imagem Destacada → Definir
+
+PROBLEMA: Hero Section vazia
+SOLUÇÃO:
+   → Marcar um post como _is_ns_featured = 1
+   → OU publicar posts novos (usa o mais recente)
+
+PROBLEMA: Seção Vídeos vazia
+SOLUÇÃO:
+   → Marcar posts com Formato "Vídeo"
+   → Editar post → Formato → Vídeo
+
+═══════════════════════════════════════════════════════════════
+    📚 DOCUMENTAÇÃO COMPLETA
+═══════════════════════════════════════════════════════════════
+
+Dentro do tema (news-soberano/):
+
+   📖 README.md - Documentação técnica completa
+   📋 CHANGELOG.md - Histórico de todas as versões
+   📝 VERSION.txt - Informações de versão
+   🏠 RELEASE-NOTES-v1.2.0.txt - Detalhes desta versão
+   🎨 MELHORIAS-G1.txt - Funcionalidades estilo G1
+
+═══════════════════════════════════════════════════════════════
+    ✅ CHECKLIST PÓS-INSTALAÇÃO
+═══════════════════════════════════════════════════════════════
+
+   ☐ Tema instalado e ativado
+   ☐ Homepage nova visualizada
+   ☐ Cache limpo
+   ☐ Testado no mobile
+   ☐ Posts têm imagens destacadas
+   ☐ (Opcional) Hero post marcado
+   ☐ (Opcional) Posts de vídeo marcados
+   ☐ WP Rocket reativado
+   ☐ Rank Math funcionando
+   ☐ AMP testado (URL/?amp=1)
+
+═══════════════════════════════════════════════════════════════
+    🎉 PRONTO!
+═══════════════════════════════════════════════════════════════
+
+Seu site agora tem uma homepage profissional de nível mundial,
+comparável aos maiores portais de notícias do Brasil!
+
+✨ 6 seções organizadas
+✨ Layout denso e informativo
+✨ Hero section chamativa
+✨ Responsivo em todos os dispositivos
+✨ Performance otimizada
+✨ SEO otimizado
+
+═══════════════════════════════════════════════════════════════
+
+Desenvolvido para: Jornal Campo Soberano
+Data: 11 de Dezembro de 2025
+Versão: 1.2.0 "Homepage Completa"
+
+🚀 Bom trabalho!

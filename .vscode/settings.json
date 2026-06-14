@@ -1,0 +1,12 @@
+{
+  "javascript.implicitProjectConfig.checkJs": false,
+  "typescript.validate.enable": false,
+  "eslint.enable": false,
+  "cSpell.language": "en,pt,pt-BR",
+  "cSpell.ignorePaths": [
+    "orchestrator.js",
+    "memory/memory.js",
+    "package.json",
+    "package-lock.json"
+  ]
+}

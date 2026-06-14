@@ -1,0 +1,319 @@
+version: "3.7"
+
+# ============================================================
+# SUPABASE SELF-HOSTED — Multi-cliente (3 databases isolados)
+# Rede: camposoberano | Traefik: Let's Encrypt
+#
+# ANTES DE DEPLOYAR:
+# 1. Rode: bash gerar-secrets.sh  (na VPS)
+# 2. Substitua TODOS os <<PLACEHOLDERS>> pelos valores gerados
+# 3. Crie o volume: docker volume create supabase_db_data
+# 4. Deploy via Portainer: Stacks > Add Stack > colar este YAML
+# 5. Após subir o container, rode: bash setup-databases.sh
+# ============================================================
+
+services:
+
+  ## ─────────────────────────────────────────────────────────
+  ## POSTGRES — 1 instância, 3 databases (soberano/ortovital/institutobelem)
+  ## ─────────────────────────────────────────────────────────
+  supabase-db:
+    image: supabase/postgres:15.8.1.060
+    command: >
+      postgres
+      -c max_connections=500
+      -c shared_buffers=512MB
+      -c timezone=America/Sao_Paulo
+    environment:
+      POSTGRES_PASSWORD: <<SENHA_POSTGRES_SUPABASE>>
+      POSTGRES_DB: postgres
+      TZ: America/Sao_Paulo
+    volumes:
+      - supabase_db_data:/var/lib/postgresql/data
+    networks:
+      - camposoberano
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          cpus: "2"
+          memory: 1024M
+
+  ## ─────────────────────────────────────────────────────────
+  ## PG META — API de metadados para o Studio
+  ## ─────────────────────────────────────────────────────────
+  supabase-meta:
+    image: supabase/postgres-meta:v0.83.2
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: supabase-db
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: soberano
+      PG_META_DB_USER: postgres
+      PG_META_DB_PASSWORD: <<SENHA_POSTGRES_SUPABASE>>
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  ## ─────────────────────────────────────────────────────────
+  ## STUDIO — Admin UI (acessa database soberano por padrão)
+  ## URL: https://studio.soberano.pro
+  ## ─────────────────────────────────────────────────────────
+  supabase-studio:
+    image: supabase/studio:2024.12.02-sha-c1de7c9
+    environment:
+      SUPABASE_URL: https://api-soberano.soberano.pro
+      SUPABASE_PUBLIC_URL: https://api-soberano.soberano.pro
+      SUPABASE_ANON_KEY: <<ANON_KEY_SOBERANO>>
+      SUPABASE_SERVICE_KEY: <<SERVICE_KEY_SOBERANO>>
+      STUDIO_PG_META_URL: http://supabase-meta:8080
+      NEXT_PUBLIC_ENABLE_LOGS: "true"
+      NEXT_ANALYTICS_BACKEND_PROVIDER: postgres
+    networks:
+      - camposoberano
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 512M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.supabase-studio.rule=Host(`studio.soberano.pro`)
+        - traefik.http.routers.supabase-studio.entrypoints=websecure
+        - traefik.http.routers.supabase-studio.tls.certresolver=letsencryptresolver
+        - traefik.http.services.supabase-studio.loadbalancer.server.port=3000
+        - traefik.docker.network=camposoberano
+
+  ## ═══════════════════════════════════════════════════════════
+  ## CLIENTE 1: SOBERANO
+  ## API: https://api-soberano.soberano.pro
+  ## Database: soberano
+  ## ═══════════════════════════════════════════════════════════
+
+  auth-soberano:
+    image: supabase/gotrue:v2.158.1
+    environment:
+      GOTRUE_API_PORT: 9999
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: "postgres://supabase_auth_admin:<<SENHA_AUTH_ADMIN>>@supabase-db:5432/soberano?search_path=auth"
+      GOTRUE_SITE_URL: <<URL_APP_SOBERANO>>
+      GOTRUE_URI_ALLOW_LIST: "<<URL_APP_SOBERANO>>"
+      GOTRUE_DISABLE_SIGNUP: "false"
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_SECRET: <<JWT_SECRET_SOBERANO>>
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_SMTP_ADMIN_EMAIL: agrovittairece@gmail.com
+      GOTRUE_SMTP_HOST: smtp.gmail.com
+      GOTRUE_SMTP_PORT: 465
+      GOTRUE_SMTP_USER: agrovittairece@gmail.com
+      GOTRUE_SMTP_PASS: <<SMTP_PASS_GMAIL>>
+      GOTRUE_SMTP_SENDER_NAME: Soberano Pro
+      TZ: America/Sao_Paulo
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.auth-soberano.rule=Host(`api-soberano.soberano.pro`) && PathPrefix(`/auth/v1`)
+        - traefik.http.routers.auth-soberano.entrypoints=websecure
+        - traefik.http.routers.auth-soberano.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.auth-soberano.priority=10
+        - traefik.http.middlewares.strip-auth-soberano.stripprefix.prefixes=/auth/v1
+        - traefik.http.routers.auth-soberano.middlewares=strip-auth-soberano
+        - traefik.http.services.auth-soberano.loadbalancer.server.port=9999
+        - traefik.docker.network=camposoberano
+
+  rest-soberano:
+    image: postgrest/postgrest:v12.2.0
+    environment:
+      PGRST_DB_URI: "postgres://authenticator:<<SENHA_AUTHENTICATOR>>@supabase-db:5432/soberano"
+      PGRST_DB_SCHEMAS: public,storage,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: <<JWT_SECRET_SOBERANO>>
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.rest-soberano.rule=Host(`api-soberano.soberano.pro`) && PathPrefix(`/rest/v1`)
+        - traefik.http.routers.rest-soberano.entrypoints=websecure
+        - traefik.http.routers.rest-soberano.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.rest-soberano.priority=10
+        - traefik.http.middlewares.strip-rest-soberano.stripprefix.prefixes=/rest/v1
+        - traefik.http.routers.rest-soberano.middlewares=strip-rest-soberano
+        - traefik.http.services.rest-soberano.loadbalancer.server.port=3000
+        - traefik.docker.network=camposoberano
+
+  ## ═══════════════════════════════════════════════════════════
+  ## CLIENTE 2: ORTOVITAL
+  ## API: https://api-ortovital.soberano.pro
+  ## Database: ortovital
+  ## ═══════════════════════════════════════════════════════════
+
+  auth-ortovital:
+    image: supabase/gotrue:v2.158.1
+    environment:
+      GOTRUE_API_PORT: 9999
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: "postgres://supabase_auth_admin:<<SENHA_AUTH_ADMIN>>@supabase-db:5432/ortovital?search_path=auth"
+      GOTRUE_SITE_URL: <<URL_APP_ORTOVITAL>>
+      GOTRUE_URI_ALLOW_LIST: "<<URL_APP_ORTOVITAL>>"
+      GOTRUE_DISABLE_SIGNUP: "false"
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_SECRET: <<JWT_SECRET_ORTOVITAL>>
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_SMTP_ADMIN_EMAIL: agrovittairece@gmail.com
+      GOTRUE_SMTP_HOST: smtp.gmail.com
+      GOTRUE_SMTP_PORT: 465
+      GOTRUE_SMTP_USER: agrovittairece@gmail.com
+      GOTRUE_SMTP_PASS: <<SMTP_PASS_GMAIL>>
+      GOTRUE_SMTP_SENDER_NAME: Ortovital
+      TZ: America/Sao_Paulo
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.auth-ortovital.rule=Host(`api-ortovital.soberano.pro`) && PathPrefix(`/auth/v1`)
+        - traefik.http.routers.auth-ortovital.entrypoints=websecure
+        - traefik.http.routers.auth-ortovital.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.auth-ortovital.priority=10
+        - traefik.http.middlewares.strip-auth-ortovital.stripprefix.prefixes=/auth/v1
+        - traefik.http.routers.auth-ortovital.middlewares=strip-auth-ortovital
+        - traefik.http.services.auth-ortovital.loadbalancer.server.port=9999
+        - traefik.docker.network=camposoberano
+
+  rest-ortovital:
+    image: postgrest/postgrest:v12.2.0
+    environment:
+      PGRST_DB_URI: "postgres://authenticator:<<SENHA_AUTHENTICATOR>>@supabase-db:5432/ortovital"
+      PGRST_DB_SCHEMAS: public,storage,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: <<JWT_SECRET_ORTOVITAL>>
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.rest-ortovital.rule=Host(`api-ortovital.soberano.pro`) && PathPrefix(`/rest/v1`)
+        - traefik.http.routers.rest-ortovital.entrypoints=websecure
+        - traefik.http.routers.rest-ortovital.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.rest-ortovital.priority=10
+        - traefik.http.middlewares.strip-rest-ortovital.stripprefix.prefixes=/rest/v1
+        - traefik.http.routers.rest-ortovital.middlewares=strip-rest-ortovital
+        - traefik.http.services.rest-ortovital.loadbalancer.server.port=3000
+        - traefik.docker.network=camposoberano
+
+  ## ═══════════════════════════════════════════════════════════
+  ## CLIENTE 3: INSTITUTO BELÉM
+  ## API: https://api-institutobelem.soberano.pro
+  ## Database: institutobelem
+  ## ═══════════════════════════════════════════════════════════
+
+  auth-institutobelem:
+    image: supabase/gotrue:v2.158.1
+    environment:
+      GOTRUE_API_PORT: 9999
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: "postgres://supabase_auth_admin:<<SENHA_AUTH_ADMIN>>@supabase-db:5432/institutobelem?search_path=auth"
+      GOTRUE_SITE_URL: <<URL_APP_INSTITUTOBELEM>>
+      GOTRUE_URI_ALLOW_LIST: "<<URL_APP_INSTITUTOBELEM>>"
+      GOTRUE_DISABLE_SIGNUP: "false"
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: 3600
+      GOTRUE_JWT_SECRET: <<JWT_SECRET_INSTITUTOBELEM>>
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: "true"
+      GOTRUE_SMTP_ADMIN_EMAIL: agrovittairece@gmail.com
+      GOTRUE_SMTP_HOST: smtp.gmail.com
+      GOTRUE_SMTP_PORT: 465
+      GOTRUE_SMTP_USER: agrovittairece@gmail.com
+      GOTRUE_SMTP_PASS: <<SMTP_PASS_GMAIL>>
+      GOTRUE_SMTP_SENDER_NAME: Instituto Belem
+      TZ: America/Sao_Paulo
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.auth-institutobelem.rule=Host(`api-institutobelem.soberano.pro`) && PathPrefix(`/auth/v1`)
+        - traefik.http.routers.auth-institutobelem.entrypoints=websecure
+        - traefik.http.routers.auth-institutobelem.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.auth-institutobelem.priority=10
+        - traefik.http.middlewares.strip-auth-institutobelem.stripprefix.prefixes=/auth/v1
+        - traefik.http.routers.auth-institutobelem.middlewares=strip-auth-institutobelem
+        - traefik.http.services.auth-institutobelem.loadbalancer.server.port=9999
+        - traefik.docker.network=camposoberano
+
+  rest-institutobelem:
+    image: postgrest/postgrest:v12.2.0
+    environment:
+      PGRST_DB_URI: "postgres://authenticator:<<SENHA_AUTHENTICATOR>>@supabase-db:5432/institutobelem"
+      PGRST_DB_SCHEMAS: public,storage,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: <<JWT_SECRET_INSTITUTOBELEM>>
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+    networks:
+      - camposoberano
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.rest-institutobelem.rule=Host(`api-institutobelem.soberano.pro`) && PathPrefix(`/rest/v1`)
+        - traefik.http.routers.rest-institutobelem.entrypoints=websecure
+        - traefik.http.routers.rest-institutobelem.tls.certresolver=letsencryptresolver
+        - traefik.http.routers.rest-institutobelem.priority=10
+        - traefik.http.middlewares.strip-rest-institutobelem.stripprefix.prefixes=/rest/v1
+        - traefik.http.routers.rest-institutobelem.middlewares=strip-rest-institutobelem
+        - traefik.http.services.rest-institutobelem.loadbalancer.server.port=3000
+        - traefik.docker.network=camposoberano
+
+volumes:
+  supabase_db_data:
+    external: true
+    name: supabase_db_data
+
+networks:
+  camposoberano:
+    external: true
+    name: camposoberano

@@ -1,0 +1,10 @@
+# .gitignore
+node_modules/
+.agents/
+logs/
+output/
+outputs/
+scratch/
+.env
+SECRETS.md
+.DS_Store

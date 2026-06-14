@@ -1,0 +1,101 @@
+╔══════════════════════════════════════════════════════════╗
+║                                                          ║
+║        🦷 SISTEMA ORTOVITAL - INSTALAÇÃO FÁCIL 🦷       ║
+║                                                          ║
+╚══════════════════════════════════════════════════════════╝
+
+Siga estes passos NA ORDEM:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 ANTES DE TUDO - CRIAR BANCO DE DADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Acesse: https://app.supabase.com
+
+2. Crie uma conta (grátis)
+   - Clique em "Sign Up"
+   - Use GitHub ou email
+
+3. Clique em "New Project"
+   - Nome: ortovital
+   - Senha: (clique em "Generate password" e copie)
+   - Região: São Paulo
+   - Clique em "Create new project"
+   - AGUARDE 2-3 MINUTOS
+
+4. Quando abrir o projeto:
+   - Menu lateral → SQL Editor
+   - Clique em "+ New query"
+
+5. Abra o arquivo: ortovital_supabase_completo.sql
+   - Aperte Ctrl+A (selecionar tudo)
+   - Aperte Ctrl+C (copiar)
+
+6. Volte para o Supabase:
+   - Aperte Ctrl+V (colar)
+   - Clique em "Run" (ou Ctrl+Enter)
+   - AGUARDE 10 segundos
+   - Deve aparecer: "Success" ✅
+
+✅ BANCO CRIADO!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 PASSO 1 - INSTALAR O DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+➡️  DUPLO CLIQUE EM: PASSO_1_INSTALAR.bat
+
+    - Uma janela preta vai abrir
+    - Aguarde 2-3 minutos
+    - Quando terminar, aperte qualquer tecla
+
+✅ INSTALADO!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 PASSO 2 - CONFIGURAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+➡️  ABRA O ARQUIVO: PASSO_2_CONFIGURAR.txt
+
+    Siga as instruções para pegar suas credenciais do Supabase
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 PASSO 3 - RODAR O SISTEMA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+➡️  DUPLO CLIQUE EM: PASSO_3_RODAR.bat
+
+    - Uma janela preta vai abrir e FICAR ABERTA
+    - Aguarde aparecer "Ready"
+
+➡️  ABRA SEU NAVEGADOR:
+
+    Digite: http://localhost:3000
+
+🎉 PRONTO! SISTEMA FUNCIONANDO!
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 RESUMO DOS ARQUIVOS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📄 COMECE_AQUI.txt          ← VOCÊ ESTÁ AQUI
+📄 PASSO_1_INSTALAR.bat     ← Duplo clique (instala)
+📄 PASSO_2_CONFIGURAR.txt   ← Abra e leia
+📄 PASSO_3_RODAR.bat        ← Duplo clique (roda)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❓ DÚVIDAS?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Me diga em qual passo você está e o que apareceu!
+
+Vou te ajudar! 😊
+
+
+Criado por: Claude AI
+Data: Outubro 2025

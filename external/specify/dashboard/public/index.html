@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>.specify Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="glow-bg"></div>
+  <header>
+    <div class="header-left">
+      <span class="logo">.specify</span>
+      <span class="logo-sub">Dashboard</span>
+    </div>
+    <div class="header-right">
+      <span class="feature-label"><i data-lucide="git-branch" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>Feature ativa:</span>
+      <span id="current-feature" class="feature-value">—</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <ul>
+        <li class="nav-item active" data-category="scripts">
+          <i data-lucide="terminal" class="nav-icon"></i>
+          <span class="nav-label">Scripts Bash</span>
+          <span class="nav-count" id="count-scripts">0</span>
+        </li>
+        <li class="nav-item" data-category="skills">
+          <i data-lucide="cpu" class="nav-icon"></i>
+          <span class="nav-label">Skills Claude</span>
+          <span class="nav-count" id="count-skills">0</span>
+        </li>
+        <li class="nav-item" data-category="speckit">
+          <i data-lucide="clipboard-list" class="nav-icon"></i>
+          <span class="nav-label">SpecKit</span>
+          <span class="nav-count" id="count-speckit">0</span>
+        </li>
+        <li class="nav-item" data-category="templates">
+          <i data-lucide="file-text" class="nav-icon"></i>
+          <span class="nav-label">Templates</span>
+          <span class="nav-count" id="count-templates">0</span>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <div class="search-wrapper">
+        <i data-lucide="search" class="search-icon"></i>
+        <input type="text" id="search-input" placeholder="Pesquisar por nome, descrição, comando..." />
+      </div>
+
+      <div id="command-list" class="command-list animate-fade"></div>
+      <div id="detail-panel" class="detail-panel hidden animate-fade">
+        <button class="back-btn" id="back-btn">
+          <i data-lucide="arrow-left" class="btn-icon"></i> Voltar
+        </button>
+        <div id="detail-content"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🤖 Agente: Modo Interativo",
+      "type": "shell",
+      "command": "node orchestrator.js",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true,
+        "clear": true
+      },
+      "group": "none",
+      "problemMatcher": []
+    },
+    {
+      "label": "🎨 Agente: Frontend",
+      "type": "shell",
+      "command": "node orchestrator.js --agent frontend \"${input:mensagemFrontend}\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "⚙️ Agente: Backend",
+      "type": "shell",
+      "command": "node orchestrator.js --agent backend \"${input:mensagemBackend}\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🏗️ Agente: Infraestrutura",
+      "type": "shell",
+      "command": "node orchestrator.js --agent infra \"${input:mensagemInfra}\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🧪 Agente: QA — Revisar arquivo atual",
+      "type": "shell",
+      "command": "node orchestrator.js --agent qa \"Revise o arquivo ${file} e liste todos os problemas encontrados, com sugestões de correção\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "📣 Agente: Marketing — Melhorar texto",
+      "type": "shell",
+      "command": "node orchestrator.js --agent marketing \"Leia o arquivo ${file} e melhore todos os textos para maior conversão e engajamento\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "📚 Agente: Docs — Documentar arquivo atual",
+      "type": "shell",
+      "command": "node orchestrator.js --agent docs \"Leia o arquivo ${file} e crie documentação completa em português\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔍 Agente: SEO — Otimizar página",
+      "type": "shell",
+      "command": "node orchestrator.js --agent seo \"Leia o arquivo ${file} e otimize para SEO: meta tags, títulos, estrutura e conteúdo\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🔒 Agente: Segurança — Auditar projeto",
+      "type": "shell",
+      "command": "node orchestrator.js --agent seguranca \"Faça uma auditoria de segurança completa do projeto em ${workspaceFolder}\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "⚡ Agente: Performance — Auditar",
+      "type": "shell",
+      "command": "node orchestrator.js --agent performance \"Analise a performance do projeto em ${workspaceFolder} e sugira otimizações específicas\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "🧠 Ver memórias dos agentes",
+      "type": "shell",
+      "command": "node -e \"import('./memory/memory.js').then(m => m.listarMemorias(null, 20)).then(r => { r.forEach(m => console.log('['+m.agent_id+'] '+m.titulo)); process.exit(0); })\"",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "mensagemFrontend",
+      "description": "O que o agente Frontend deve fazer?",
+      "default": "Revise o código e sugira melhorias de UI/UX",
+      "type": "promptString"
+    },
+    {
+      "id": "mensagemBackend",
+      "description": "O que o agente Backend deve fazer?",
+      "default": "Revise as APIs e melhore o tratamento de erros",
+      "type": "promptString"
+    },
+    {
+      "id": "mensagemInfra",
+      "description": "O que o agente de Infraestrutura deve fazer?",
+      "default": "Revise o docker-compose e otimize a configuração",
+      "type": "promptString"
+    }
+  ]
+}

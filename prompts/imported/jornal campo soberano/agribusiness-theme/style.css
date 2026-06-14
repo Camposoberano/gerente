@@ -1,0 +1,562 @@
+/*
+Theme Name: Agribusiness News Theme
+Theme URI: https://example.com/agribusiness-theme
+Author: Agribusiness Media
+Author URI: https://example.com
+Description: A high-contrast, offline-first WordPress theme for Agribusiness news.
+Version: 1.1.9
+Text Domain: agribusiness
+Tags: news, agriculture, pwa, offline-first, right-sidebar
+*/
+
+:root {
+    --color-primary: #006233;
+    /* Globo Rural Green */
+    --color-primary-dark: #004d28;
+    --color-secondary: #C85200;
+    /* Contrast/Accent Color */
+    --color-text: #333333;
+    --color-text-light: #666666;
+    --color-bg: #FFFFFF;
+    --color-border: #E5E5E5;
+
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    --container-width: 1140px;
+    --header-height: auto;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Typography                                  */
+/* -------------------------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+    color: #111;
+    font-weight: 700;
+    margin-top: 0;
+    line-height: 1.2;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-primary);
+}
+
+.container {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  Header                                    */
+/* -------------------------------------------------------------------------- */
+.commodities-ticker {
+    background: #f8f9fa;
+    color: #333;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.8rem;
+    padding: 0.4rem 0;
+    font-family: var(--font-body);
+    font-weight: 500;
+    width: 100%;
+    overflow: hidden;
+    /* Essential for ticker */
+    white-space: nowrap;
+}
+
+.ticker-wrap {
+    display: inline-block;
+    padding-left: 100%;
+    animation: ticker 40s linear infinite;
+    /* Slower for readability */
+    white-space: nowrap;
+}
+
+.ticker-item {
+    display: inline-block;
+    padding: 0 2rem;
+}
+
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+.site-header {
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 50;
+    display: block;
+    /* Ensure it is visible */
+}
+
+.header-inner {
+    padding: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    /* Stack logo and nav by default, nicer */
+    gap: 1rem;
+}
+
+.site-title {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin: 0;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.site-title a {
+    color: var(--color-primary);
+}
+
+/* Navigation Bar */
+.main-navigation {
+    background: var(--color-primary);
+    color: #fff;
+    font-family: var(--font-body);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.main-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    flex-wrap: wrap;
+    /* Allow wrapping securely */
+}
+
+.main-navigation li {
+    position: relative;
+}
+
+.main-navigation a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: #fff;
+}
+
+.main-navigation a:hover {
+    background: var(--color-primary-dark);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Hero Grid (Desktop Default)                 */
+/* -------------------------------------------------------------------------- */
+.home-hero-section {
+    margin: 3rem 0;
+}
+
+/* DESKTOP GRID (Default) */
+.hero-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* 2 Columns: Main Hero (66%) | Sidebar (33%) */
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Main Hero Card */
+.hero-card {
+    position: relative;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    background: #fff;
+    min-height: 500px;
+    height: 100%;
+}
+
+.hero-image-wrapper {
+    height: 100%;
+    /* Cover style for desktop */
+    position: relative;
+}
+
+.hero-image-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 70%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    /* Darker gradient */
+}
+
+.hero-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.hero-card:hover .hero-image-wrapper img {
+    transform: scale(1.03);
+}
+
+/* Overlay Text (Desktop) */
+.hero-content-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 3rem;
+    z-index: 2;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.hero-cat {
+    background: var(--color-secondary);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    color: #fff;
+    /* White on desktop overlay */
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    margin: 0.5rem 0 0.5rem;
+    line-height: 1.1;
+}
+
+.hero-meta {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Secondary Cards (Sidebar of Hero) */
+.hero-secondary {
+    display: flex;
+    flex-direction: column;
+    /* Stacked vertically on right side */
+    gap: 1.5rem;
+}
+
+.secondary-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 0;
+    /* Remove padding for this style */
+}
+
+.secondary-thumb {
+    height: 200px;
+    width: 100%;
+}
+
+.secondary-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.secondary-info {
+    padding: 1.5rem;
+}
+
+.secondary-title {
+    font-size: 1.25rem;
+    color: #000;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                List Feed (Desktop Default)                 */
+/* -------------------------------------------------------------------------- */
+.content-grid-wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* 2 Columns: News Loop | Sidebar */
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.news-list-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.list-card {
+    display: flex;
+    gap: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    padding: 0;
+}
+
+.list-card-image {
+    width: 300px;
+    /* Fixed width on desktop */
+    height: auto;
+    min-height: 220px;
+    flex-shrink: 0;
+}
+
+.list-card-content {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.list-title {
+    font-size: 1.5rem;
+    color: #000;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+/* Sidebar Widget Area */
+#secondary {
+    display: block;
+    /* Ensure sidebar is visible on desktop */
+}
+
+.widget {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Sticky Player                                 */
+/* -------------------------------------------------------------------------- */
+.sticky-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 999;
+}
+
+.player-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.track-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.track-title {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.track-date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+audio {
+    flex-grow: 1;
+    height: 40px;
+}
+
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 100px;
+    right: 20px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                MOBILE OVERRIDES                            */
+/* -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+
+    /* HEADER FIXES */
+    .header-inner {
+        padding: 1rem;
+    }
+
+    .main-navigation {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .main-navigation ul {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        padding: 0 1rem;
+    }
+
+    /* TICKER FIX (Critical) */
+    .commodities-ticker {
+        width: 100vw;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .ticker-wrap {
+        padding-left: 100%;
+        animation: ticker 25s linear infinite;
+        /* Faster on mobile */
+    }
+
+    /* GRID RESET -> STACK */
+    .hero-grid,
+    .content-grid-wrapper {
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: 1fr;
+        /* Override grid */
+        gap: 2rem;
+        margin: 1.5rem 0;
+    }
+
+    /* HERO CARD MOBILE (Text below Image) */
+    .hero-card {
+        height: auto;
+        min-height: auto;
+    }
+
+    .hero-image-wrapper {
+        height: 250px;
+        position: relative;
+    }
+
+    .hero-image-wrapper::after {
+        display: none;
+    }
+
+    /* No gradient overlay */
+
+    .hero-content-overlay {
+        position: relative;
+        /* Normal flow */
+        padding: 1.5rem;
+        background: #fff;
+        width: 100%;
+        text-align: left;
+    }
+
+    .hero-title {
+        color: #000;
+        /* Dark title on mobile */
+        font-size: 1.5rem;
+        filter: none;
+        text-shadow: none;
+    }
+
+    .hero-meta {
+        color: #666;
+    }
+
+    /* LIST CARD STACK */
+    .list-card {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .list-card-image {
+        width: 100%;
+        height: 220px;
+    }
+
+    .list-card-content {
+        padding: 1.5rem;
+    }
+
+    /* HIDE SIDEBAR ON MOBILE (Optional, keeps it clean) */
+    #secondary {
+        display: block;
+        /* Show widgets at bottom if desired */
+        margin-top: 2rem;
+        border-top: 1px solid #eee;
+        padding-top: 2rem;
+    }
+
+    .sticky-player {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+}

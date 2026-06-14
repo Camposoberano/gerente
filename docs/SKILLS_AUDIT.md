@@ -1,0 +1,270 @@
+# Auditoria De Skills
+
+Gerado em: 2026-06-14T06:22:23.439Z
+
+- Entradas totais: 332
+- Skills unicas por nome normalizado: 216
+- Grupos duplicados: 116
+
+## Categorias
+
+- automation: 101
+- code: 8
+- docs_ops: 10
+- finance: 9
+- frontend: 49
+- general: 81
+- legal_security: 14
+- marketing: 27
+- sales: 18
+- seo_content: 15
+
+## Duplicadas Principais
+
+- acordo-de-sigilo-estrategico (2)
+  - agents-root: `skills\imported\agents-root-skills\acordo-de-sigilo-estrategico\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\acordo-de-sigilo-estrategico\skill.md`
+- agente-llm-conectado-ao-whatsapp (2)
+  - agents-root: `skills\imported\agents-root-skills\agente-llm-conectado-ao-whatsapp\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\agente-llm-conectado-ao-whatsapp\skill.md`
+- arquiteto-de-pecas-juridicas-com-teses (2)
+  - agents-root: `skills\imported\agents-root-skills\arquiteto-de-pecas-juridicas-com-teses\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arquiteto-de-pecas-juridicas-com-teses\skill.md`
+- arquitetura-de-campanha-meta-ads (2)
+  - agents-root: `skills\imported\agents-root-skills\arquitetura-de-campanha-meta-ads\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arquitetura-de-campanha-meta-ads\skill.md`
+- arquitetura-de-funil-end-to-end (2)
+  - agents-root: `skills\imported\agents-root-skills\arquitetura-de-funil-end-to-end\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arquitetura-de-funil-end-to-end\skill.md`
+- arquitetura-de-tracking-utm-e-eventos (2)
+  - agents-root: `skills\imported\agents-root-skills\arquitetura-de-tracking-utm-e-eventos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arquitetura-de-tracking-utm-e-eventos\skill.md`
+- arquitetura-pedagogica-de-curso-online (2)
+  - agents-root: `skills\imported\agents-root-skills\arquitetura-pedagogica-de-curso-online\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arquitetura-pedagogica-de-curso-online\skill.md`
+- arsenal-anti-objecao (2)
+  - agents-root: `skills\imported\agents-root-skills\arsenal-anti-objecao\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arsenal-anti-objecao\skill.md`
+- arsenal-de-copy-para-meta-ads (2)
+  - agents-root: `skills\imported\agents-root-skills\arsenal-de-copy-para-meta-ads\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arsenal-de-copy-para-meta-ads\skill.md`
+- arsenal-de-google-ads-search (2)
+  - agents-root: `skills\imported\agents-root-skills\arsenal-de-google-ads-search\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arsenal-de-google-ads-search\skill.md`
+- arsenal-de-objecoes-para-agencia-de-marketing (2)
+  - agents-root: `skills\imported\agents-root-skills\arsenal-de-objecoes-para-agencia-de-marketing\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\arsenal-de-objecoes-para-agencia-de-marketing\skill.md`
+- auditor-de-contratos-com-risco-mapeado (2)
+  - agents-root: `skills\imported\agents-root-skills\auditor-de-contratos-com-risco-mapeado\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\auditor-de-contratos-com-risco-mapeado\skill.md`
+- auditoria-de-funil-em-meta-ads (2)
+  - agents-root: `skills\imported\agents-root-skills\auditoria-de-funil-em-meta-ads\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\auditoria-de-funil-em-meta-ads\skill.md`
+- avaliacao-de-desempenho-estruturada (2)
+  - agents-root: `skills\imported\agents-root-skills\avaliacao-de-desempenho-estruturada\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\avaliacao-de-desempenho-estruturada\skill.md`
+- blueprint-de-automacao-no-code (2)
+  - agents-root: `skills\imported\agents-root-skills\blueprint-de-automacao-no-code\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\blueprint-de-automacao-no-code\skill.md`
+- blueprint-de-proposta-comercial-b2b (2)
+  - agents-root: `skills\imported\agents-root-skills\blueprint-de-proposta-comercial-b2b\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\blueprint-de-proposta-comercial-b2b\skill.md`
+- blueprint-de-webinar-de-vendas (2)
+  - agents-root: `skills\imported\agents-root-skills\blueprint-de-webinar-de-vendas\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\blueprint-de-webinar-de-vendas\skill.md`
+- blueprint-operacional-de-lancamento (2)
+  - agents-root: `skills\imported\agents-root-skills\blueprint-operacional-de-lancamento\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\blueprint-operacional-de-lancamento\skill.md`
+- bot-conversacional-whatsapp-para-venda (2)
+  - agents-root: `skills\imported\agents-root-skills\bot-conversacional-whatsapp-para-venda\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\bot-conversacional-whatsapp-para-venda\skill.md`
+- cadencia-de-follow-up-para-lead-imobiliario (2)
+  - agents-root: `skills\imported\agents-root-skills\cadencia-de-follow-up-para-lead-imobiliario\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\cadencia-de-follow-up-para-lead-imobiliario\skill.md`
+- calendario-editorial-para-imobiliaria (2)
+  - agents-root: `skills\imported\agents-root-skills\calendario-editorial-para-imobiliaria\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\calendario-editorial-para-imobiliaria\skill.md`
+- capa-magnetica-de-carrossel (2)
+  - agents-root: `skills\imported\agents-root-skills\capa-magnetica-de-carrossel\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\capa-magnetica-de-carrossel\skill.md`
+- claude-cowork-consolidacao-notas (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-consolidacao-notas\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-consolidacao-notas\skill.md`
+- claude-cowork-limpeza-duplicatas (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-limpeza-duplicatas\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-limpeza-duplicatas\skill.md`
+- claude-cowork-memoria-preferencias (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-memoria-preferencias\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-memoria-preferencias\skill.md`
+- claude-cowork-organizacao-pasta (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-organizacao-pasta\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-organizacao-pasta\skill.md`
+- claude-cowork-padronizacao-nomes (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-padronizacao-nomes\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-padronizacao-nomes\skill.md`
+- claude-cowork-pauta-reuniao (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-pauta-reuniao\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-pauta-reuniao\skill.md`
+- claude-cowork-relatorio-semanal (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-relatorio-semanal\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-relatorio-semanal\skill.md`
+- claude-cowork-revisao-contratos (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-revisao-contratos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-revisao-contratos\skill.md`
+- claude-cowork-sintese-pesquisa (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-sintese-pesquisa\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-sintese-pesquisa\skill.md`
+- claude-cowork-triagem-email (2)
+  - agents-root: `skills\imported\agents-root-skills\claude-cowork-triagem-email\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\claude-cowork-triagem-email\skill.md`
+- cofre-de-prompts-para-operacao-com-ia (2)
+  - agents-root: `skills\imported\agents-root-skills\cofre-de-prompts-para-operacao-com-ia\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\cofre-de-prompts-para-operacao-com-ia\skill.md`
+- comparativo-tributario-inteligente (2)
+  - agents-root: `skills\imported\agents-root-skills\comparativo-tributario-inteligente\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\comparativo-tributario-inteligente\skill.md`
+- consulta-de-captacao-consultiva (2)
+  - agents-root: `skills\imported\agents-root-skills\consulta-de-captacao-consultiva\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\consulta-de-captacao-consultiva\skill.md`
+- contrato-blindagem-prestacao-servicos (2)
+  - agents-root: `skills\imported\agents-root-skills\contrato-blindagem-prestacao-servicos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\contrato-blindagem-prestacao-servicos\skill.md`
+- copy-completa-da-dobra-zero (2)
+  - agents-root: `skills\imported\agents-root-skills\copy-completa-da-dobra-zero\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\copy-completa-da-dobra-zero\skill.md`
+- copy-de-sales-page-longa (2)
+  - agents-root: `skills\imported\agents-root-skills\copy-de-sales-page-longa\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\copy-de-sales-page-longa\skill.md`
+- dashboard-mensal-de-marketing-com-diagnostico (2)
+  - agents-root: `skills\imported\agents-root-skills\dashboard-mensal-de-marketing-com-diagnostico\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\dashboard-mensal-de-marketing-com-diagnostico\skill.md`
+- debug-issue (2)
+  - agents-root: `skills\imported\agents-root-skills\debug-issue\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\debug-issue\skill.md`
+- descricao-de-vaga-magnetica (2)
+  - agents-root: `skills\imported\agents-root-skills\descricao-de-vaga-magnetica\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\descricao-de-vaga-magnetica\skill.md`
+- diagnostico-de-conformidade-lgpd (2)
+  - agents-root: `skills\imported\agents-root-skills\diagnostico-de-conformidade-lgpd\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\diagnostico-de-conformidade-lgpd\skill.md`
+- diagnostico-financeiro-tributario-rapido (2)
+  - agents-root: `skills\imported\agents-root-skills\diagnostico-financeiro-tributario-rapido\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\diagnostico-financeiro-tributario-rapido\skill.md`
+- discovery-call-de-servico-consultivo (2)
+  - agents-root: `skills\imported\agents-root-skills\discovery-call-de-servico-consultivo\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\discovery-call-de-servico-consultivo\skill.md`
+- dre-gerencial-acionavel-para-pme (2)
+  - agents-root: `skills\imported\agents-root-skills\dre-gerencial-acionavel-para-pme\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\dre-gerencial-acionavel-para-pme\skill.md`
+- editor-de-voz-autoral-anti-ia (2)
+  - agents-root: `skills\imported\agents-root-skills\editor-de-voz-autoral-anti-ia\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\editor-de-voz-autoral-anti-ia\skill.md`
+- email-de-oferta-direta (2)
+  - agents-root: `skills\imported\agents-root-skills\email-de-oferta-direta\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\email-de-oferta-direta\skill.md`
+- engine-de-emails-de-lancamento (2)
+  - agents-root: `skills\imported\agents-root-skills\engine-de-emails-de-lancamento\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\engine-de-emails-de-lancamento\skill.md`
+- executive-brief-de-uma-pagina (2)
+  - agents-root: `skills\imported\agents-root-skills\executive-brief-de-uma-pagina\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\executive-brief-de-uma-pagina\skill.md`
+- explore-codebase (2)
+  - agents-root: `skills\imported\agents-root-skills\explore-codebase\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\explore-codebase\skill.md`
+- fabrica-de-prova-social (2)
+  - agents-root: `skills\imported\agents-root-skills\fabrica-de-prova-social\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\fabrica-de-prova-social\skill.md`
+- ficha-de-produto-persuasiva-ecommerce (2)
+  - agents-root: `skills\imported\agents-root-skills\ficha-de-produto-persuasiva-ecommerce\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\ficha-de-produto-persuasiva-ecommerce\skill.md`
+- forja-de-ctas-magneticos (2)
+  - agents-root: `skills\imported\agents-root-skills\forja-de-ctas-magneticos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\forja-de-ctas-magneticos\skill.md`
+- forja-de-headlines-multi-framework (2)
+  - agents-root: `skills\imported\agents-root-skills\forja-de-headlines-multi-framework\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\forja-de-headlines-multi-framework\skill.md`
+- forja-de-pecas-processuais-diversas (2)
+  - agents-root: `skills\imported\agents-root-skills\forja-de-pecas-processuais-diversas\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\forja-de-pecas-processuais-diversas\skill.md`
+- forja-de-system-prompts-para-ia-customizada (2)
+  - agents-root: `skills\imported\agents-root-skills\forja-de-system-prompts-para-ia-customizada\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\forja-de-system-prompts-para-ia-customizada\skill.md`
+- forja-de-vsl-rapida (2)
+  - agents-root: `skills\imported\agents-root-skills\forja-de-vsl-rapida\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\forja-de-vsl-rapida\skill.md`
+- funil-de-vendas-com-mapa-de-nutricao (2)
+  - agents-root: `skills\imported\agents-root-skills\funil-de-vendas-com-mapa-de-nutricao\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\funil-de-vendas-com-mapa-de-nutricao\skill.md`
+- gancho-dos-3-segundos (2)
+  - agents-root: `skills\imported\agents-root-skills\gancho-dos-3-segundos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\gancho-dos-3-segundos\skill.md`
+- gerenciar-skills (2)
+  - agents-root: `skills\imported\agents-root-skills\gerenciar-skills\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\gerenciar-skills\skill.md`
+- guia-de-tom-de-voz-autoral (2)
+  - agents-root: `skills\imported\agents-root-skills\guia-de-tom-de-voz-autoral\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\guia-de-tom-de-voz-autoral\skill.md`
+- hero-section-de-landing-page (2)
+  - agents-root: `skills\imported\agents-root-skills\hero-section-de-landing-page\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\hero-section-de-landing-page\skill.md`
+- implementacao-de-gtd-passo-a-passo (2)
+  - agents-root: `skills\imported\agents-root-skills\implementacao-de-gtd-passo-a-passo\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\implementacao-de-gtd-passo-a-passo\skill.md`
+- investigacao-de-seo-em-declinio (2)
+  - agents-root: `skills\imported\agents-root-skills\investigacao-de-seo-em-declinio\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\investigacao-de-seo-em-declinio\skill.md`
+- isca-digital-magnetica-com-lp-de-captura (2)
+  - agents-root: `skills\imported\agents-root-skills\isca-digital-magnetica-com-lp-de-captura\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\isca-digital-magnetica-com-lp-de-captura\skill.md`
+- isca-digital-que-qualifica (2)
+  - agents-root: `skills\imported\agents-root-skills\isca-digital-que-qualifica\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\isca-digital-que-qualifica\skill.md`
+- jornada-do-heroi-em-copy-de-vendas (2)
+  - agents-root: `skills\imported\agents-root-skills\jornada-do-heroi-em-copy-de-vendas\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\jornada-do-heroi-em-copy-de-vendas\skill.md`
+- laboratorio-de-testes-a-b-de-headlines (2)
+  - agents-root: `skills\imported\agents-root-skills\laboratorio-de-testes-a-b-de-headlines\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\laboratorio-de-testes-a-b-de-headlines\skill.md`
+- laboratorio-de-testes-de-criativos-pagos (2)
+  - agents-root: `skills\imported\agents-root-skills\laboratorio-de-testes-de-criativos-pagos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\laboratorio-de-testes-de-criativos-pagos\skill.md`
+- lancamento-intimista-para-especialista-solo (2)
+  - agents-root: `skills\imported\agents-root-skills\lancamento-intimista-para-especialista-solo\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\lancamento-intimista-para-especialista-solo\skill.md`
+- legenda-longa-storytelling (2)
+  - agents-root: `skills\imported\agents-root-skills\legenda-longa-storytelling\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\legenda-longa-storytelling\skill.md`
+- lp-transacional-de-conversao-direta (2)
+  - agents-root: `skills\imported\agents-root-skills\lp-transacional-de-conversao-direta\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\lp-transacional-de-conversao-direta\skill.md`
+- mapa-de-keywords-com-intencao (2)
+  - agents-root: `skills\imported\agents-root-skills\mapa-de-keywords-com-intencao\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\mapa-de-keywords-com-intencao\skill.md`
+- mapa-de-oportunidades-de-automacao (2)
+  - agents-root: `skills\imported\agents-root-skills\mapa-de-oportunidades-de-automacao\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\mapa-de-oportunidades-de-automacao\skill.md`
+- mapa-de-processos-da-imobiliaria (2)
+  - agents-root: `skills\imported\agents-root-skills\mapa-de-processos-da-imobiliaria\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\mapa-de-processos-da-imobiliaria\skill.md`
+- motor-de-artigo-seo-ranqueavel (2)
+  - agents-root: `skills\imported\agents-root-skills\motor-de-artigo-seo-ranqueavel\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\motor-de-artigo-seo-ranqueavel\skill.md`
+- motor-de-escala-de-anuncios-pagos (2)
+  - agents-root: `skills\imported\agents-root-skills\motor-de-escala-de-anuncios-pagos\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\motor-de-escala-de-anuncios-pagos\skill.md`
+- okrs-calibrados-por-fase (2)
+  - agents-root: `skills\imported\agents-root-skills\okrs-calibrados-por-fase\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\okrs-calibrados-por-fase\skill.md`
+- pilar-de-conteudo-dominante (2)
+  - agents-root: `skills\imported\agents-root-skills\pilar-de-conteudo-dominante\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\pilar-de-conteudo-dominante\skill.md`
+- plano-de-lancamento-com-meta-de-faturamento (2)
+  - agents-root: `skills\imported\agents-root-skills\plano-de-lancamento-com-meta-de-faturamento\skill.md`
+  - claude-root: `skills\imported\claude-root-skills\plano-de-lancamento-com-meta-de-faturamento\skill.md`
+
+## Regra Recomendada
+
+- Usar `skills/imported/agents-root-skills` como fonte ativa no orquestrador.
+- Manter `skills/imported/claude-root-skills` como backup/importacao historica.
+- Manter `skills/packs/pack-100-skills` como biblioteca bruta por categoria.
+- Normalizar novas skills em uma unica pasta ativa antes de ligar ao agente.

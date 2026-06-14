@@ -1,0 +1,286 @@
+═══════════════════════════════════════════════════════════════
+    NEWS SOBERANO v1.2.1 - "CORREÇÃO DE IMAGENS"
+    RELEASE NOTES - PATCH
+═══════════════════════════════════════════════════════════════
+
+Data de Lançamento: 11 de Dezembro de 2025
+Tipo: Patch (Correção de Bugs)
+Compatibilidade: ✅ Totalmente compatível com v1.2.0
+
+═══════════════════════════════════════════════════════════════
+    🐛 PROBLEMA RELATADO
+═══════════════════════════════════════════════════════════════
+
+USUÁRIO REPORTOU:
+   1. ❌ Imagens em destaque não apareciam
+   2. ❌ Seção "Últimas Notícias" com erro visual
+
+CAUSA IDENTIFICADA:
+   • Posts sem imagem destacada não exibiam placeholder
+   • Código verificava if(has_post_thumbnail()) antes de renderizar
+   • Resultado: Seções ficavam vazias ou quebradas
+
+═══════════════════════════════════════════════════════════════
+    ✅ CORREÇÕES IMPLEMENTADAS
+═══════════════════════════════════════════════════════════════
+
+1. 🖼️ SISTEMA DE PLACEHOLDER SVG
+   ────────────────────────────────────────────────────────────
+   • Nova função: news_soberano_get_thumbnail()
+   • Retorna imagem destacada OU placeholder SVG
+   • Placeholder elegante com texto "Sem imagem"
+   • 4 tamanhos adaptáveis:
+     - news-featured: 1200x600px
+     - news-large: 800x450px
+     - news-medium: 400x225px
+     - news-thumb: 200x150px
+
+2. 🔧 FRONT-PAGE.PHP ATUALIZADO
+   ────────────────────────────────────────────────────────────
+   ANTES:
+   <?php if (has_post_thumbnail()) : ?>
+       <img src="...">
+   <?php endif; ?>
+
+   DEPOIS:
+   <?php echo news_soberano_get_thumbnail('news-medium'); ?>
+
+   • Todas as 5 seções atualizadas:
+     ✅ Hero Section
+     ✅ Grid Lateral
+     ✅ Não Perca
+     ✅ Vídeos
+     ✅ Últimas Notícias
+
+3. 🎨 CSS APRIMORADO
+   ────────────────────────────────────────────────────────────
+   • Adicionada classe .placeholder-img
+   • Suporte SVG em todas as seções
+   • Melhor exibição de imagens
+   • Background cinza (#e5e7eb) nos placeholders
+   • display: block; para garantir renderização
+
+═══════════════════════════════════════════════════════════════
+    📁 ARQUIVOS MODIFICADOS
+═══════════════════════════════════════════════════════════════
+
+1. functions.php (+32 linhas)
+   • Nova função news_soberano_get_thumbnail()
+   • Gera SVG placeholder dinamicamente
+   • Suporta todos os tamanhos de imagem
+
+2. front-page.php (~5 edições)
+   • Hero Section atualizada
+   • Grid Lateral atualizado
+   • Não Perca atualizado
+   • Vídeos atualizado
+   • Últimas Notícias atualizado
+
+3. assets/css/homepage-layout.css (+25 linhas)
+   • Estilos para .placeholder-img
+   • Suporte SVG em .hero-image
+   • Suporte SVG em .sidebar-post-image
+   • Suporte SVG em .dont-miss-image
+   • Suporte SVG em .video-image
+   • Suporte SVG em .latest-news-image
+
+4. style.css
+   • Versão: 1.2.0 → 1.2.1
+
+5. VERSION.txt
+   • Versão atual: 1.2.1
+   • Histórico atualizado
+
+6. CHANGELOG.md
+   • Seção v1.2.1 adicionada
+   • Correções documentadas
+
+═══════════════════════════════════════════════════════════════
+    📊 ESTATÍSTICAS DA VERSÃO
+═══════════════════════════════════════════════════════════════
+
+Tipo:                    Patch (1.2.0 → 1.2.1)
+Arquivos modificados:    6
+Linhas adicionadas:      ~60
+Linhas removidas:        ~5
+Bugs corrigidos:         2
+
+Compatibilidade:         100% com v1.2.0
+Breaking changes:        Nenhum
+Impacto visual:          Positivo (sempre mostra imagens)
+Impacto performance:     Neutro (SVG inline leve)
+
+═══════════════════════════════════════════════════════════════
+    🎯 RESULTADO
+═══════════════════════════════════════════════════════════════
+
+ANTES (v1.2.0):
+   • Posts sem imagem: Seção vazia ou quebrada ❌
+   • Últimas notícias: Pode ter layout quebrado ❌
+   • Experiência: Incompleta ❌
+
+DEPOIS (v1.2.1):
+   • Posts sem imagem: Placeholder elegante ✅
+   • Últimas notícias: Layout perfeito ✅
+   • Experiência: Completa e profissional ✅
+
+═══════════════════════════════════════════════════════════════
+    🔄 ATUALIZAÇÃO DE v1.2.0 PARA v1.2.1
+═══════════════════════════════════════════════════════════════
+
+PASSO A PASSO:
+
+1. ✅ Fazer BACKUP do site
+2. ✅ Desativar cache (WP Rocket)
+3. ✅ Fazer upload do novo tema (news-soberano-v1.2.1.zip)
+4. ✅ Ativar tema atualizado
+5. ✅ Limpar cache
+6. ✅ Verificar homepage
+
+TEMPO ESTIMADO: 2-3 minutos
+
+RISCO: ⚡ Muito baixo (apenas correções de bugs)
+
+IMPORTANTE:
+   • Totalmente compatível
+   • Nenhuma configuração necessária
+   • Funciona imediatamente
+   • Não afeta posts ou páginas
+
+═══════════════════════════════════════════════════════════════
+    💡 COMO FUNCIONA O PLACEHOLDER
+═══════════════════════════════════════════════════════════════
+
+QUANDO UM POST NÃO TEM IMAGEM DESTACADA:
+
+1. Sistema detecta ausência de imagem
+2. Gera SVG placeholder automaticamente:
+
+   ┌─────────────────────┐
+   │                     │
+   │    Sem imagem       │
+   │                     │
+   └─────────────────────┘
+
+3. SVG tem tamanho correto para a seção
+4. Cor cinza clara (#e5e7eb)
+5. Texto centralizado "Sem imagem"
+
+VANTAGENS:
+   ✅ Layout sempre consistente
+   ✅ Nenhuma seção vazia
+   ✅ Feedback visual claro
+   ✅ Leve (SVG inline ~200 bytes)
+   ✅ Responsivo automaticamente
+
+═══════════════════════════════════════════════════════════════
+    🎨 EXEMPLO DE USO
+═══════════════════════════════════════════════════════════════
+
+DESENVOLVEDORES/USUÁRIOS AVANÇADOS:
+
+Você pode usar a nova função em qualquer lugar do tema:
+
+<?php
+// Exibir imagem ou placeholder
+echo news_soberano_get_thumbnail('news-medium');
+
+// Tamanhos disponíveis:
+// - 'news-featured' (1200x600)
+// - 'news-large' (800x450)
+// - 'news-medium' (400x225)
+// - 'news-thumb' (200x150)
+
+// Específico de um post
+echo news_soberano_get_thumbnail('news-large', $post_id);
+?>
+
+═══════════════════════════════════════════════════════════════
+    ⚡ PERFORMANCE
+═══════════════════════════════════════════════════════════════
+
+IMPACTO ZERO NA PERFORMANCE:
+
+   • SVG inline (~200 bytes vs ~50KB de imagem)
+   • Sem requisições HTTP extras
+   • Sem JavaScript necessário
+   • Cache-friendly
+   • Não aumenta tempo de carregamento
+
+COMPARAÇÃO:
+   Imagem JPEG 400x225:  ~50-150 KB
+   Placeholder SVG:      ~0.2 KB
+
+   ECONOMIA: 99.6% de bandwidth por placeholder
+
+═══════════════════════════════════════════════════════════════
+    📱 RESPONSIVIDADE
+═══════════════════════════════════════════════════════════════
+
+PLACEHOLDERS SÃO TOTALMENTE RESPONSIVOS:
+
+   • Desktop: Tamanho completo
+   • Tablet: Adapta ao grid
+   • Mobile: Largura total
+   • Aspect ratio preservado
+   • Texto legível em todos os tamanhos
+
+═══════════════════════════════════════════════════════════════
+    🧪 TESTES REALIZADOS
+═══════════════════════════════════════════════════════════════
+
+✅ Posts COM imagem destacada
+   → Exibem imagem normalmente
+
+✅ Posts SEM imagem destacada
+   → Exibem placeholder SVG
+
+✅ Hero Section
+   → Funciona com/sem imagem
+
+✅ Grid Lateral
+   → Funciona com/sem imagem
+
+✅ Não Perca
+   → Funciona com/sem imagem
+
+✅ Vídeos
+   → Funciona com/sem imagem
+
+✅ Últimas Notícias
+   → Funciona perfeitamente
+
+✅ Responsividade
+   → Desktop, tablet, mobile OK
+
+═══════════════════════════════════════════════════════════════
+    📚 DOCUMENTAÇÃO ATUALIZADA
+═══════════════════════════════════════════════════════════════
+
+   ✅ CHANGELOG.md - v1.2.1 adicionada
+   ✅ VERSION.txt - Atualizado para 1.2.1
+   ✅ Este arquivo - Release Notes v1.2.1
+
+═══════════════════════════════════════════════════════════════
+    🎉 CONCLUSÃO
+═══════════════════════════════════════════════════════════════
+
+A versão 1.2.1 corrige completamente os problemas reportados:
+
+   ✅ Imagens sempre aparecem (real ou placeholder)
+   ✅ Seção "Últimas Notícias" funcionando perfeitamente
+   ✅ Layout consistente em todas as situações
+   ✅ Experiência profissional mantida
+   ✅ Zero breaking changes
+
+RECOMENDAÇÃO: Atualizar imediatamente!
+
+═══════════════════════════════════════════════════════════════
+
+Desenvolvido para: Jornal Campo Soberano
+Data: 11 de Dezembro de 2025
+Versão: 1.2.1 "Correção de Imagens"
+
+🐛 Bugs corrigidos! ✅
+
+═══════════════════════════════════════════════════════════════

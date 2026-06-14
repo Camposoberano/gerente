@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gerente - Passo a Passo Operacional</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --paper: #ffffff;
+      --ink: #17202a;
+      --muted: #617080;
+      --line: #d9e0e7;
+      --accent: #0f766e;
+      --accent-soft: #e6f4f1;
+      --warn: #92400e;
+      --warn-soft: #fff7ed;
+      --code: #111827;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 40px 24px 56px;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 30px 0 12px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 18px 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 18px 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #b8ddd6;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 14px;
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .step:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    ul {
+      margin: 8px 0 0 18px;
+      padding: 0;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    code,
+    pre {
+      font-family: Consolas, "Courier New", monospace;
+    }
+
+    code {
+      color: var(--code);
+      background: #eef2f6;
+      border-radius: 5px;
+      padding: 2px 5px;
+      font-size: 0.94em;
+    }
+
+    pre {
+      overflow-x: auto;
+      background: #111827;
+      color: #f8fafc;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 14px;
+    }
+
+    .warn {
+      background: var(--warn-soft);
+      border-color: #fed7aa;
+      color: var(--warn);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: #f1f5f9;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        padding: 28px 16px 44px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <span class="badge">Gerente</span>
+      <span class="badge">Router V2</span>
+      <span class="badge">Fase 6 concluida</span>
+      <h1>Passo a Passo Operacional do Gerente</h1>
+      <p class="subtitle">
+        Este documento define como o gerente vai evoluir a partir de agora:
+        primeiro planeja, depois roteia, depois executa com fiscal, e por fim
+        registra aprendizado para qualquer projeto, seja EvoHub, Portainer, VPS,
+        Supabase, GitHub ou site.
+      </p>
+    </header>
+
+    <section class="panel">
+      <h2>Contrato Do Comando</h2>
+      <p>O comando principal segue o contrato da skill <code>gerente</code>.</p>
+      <pre>/gerente &lt;tarefa&gt;
+/gerente produto &lt;tarefa&gt;
+/gerente negocio &lt;tarefa&gt;
+/gerente ajuda</pre>
+      <p>Se faltar tarefa, a resposta padrao deve ser:</p>
+      <pre>Use: /gerente &lt;tarefa&gt; | /gerente produto &lt;tarefa&gt; | /gerente negocio &lt;tarefa&gt; | /gerente ajuda</pre>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Objetivo</h2>
+        <p>
+          Fazer o gerente virar a central unica de operacao de agentes. Ele nao
+          pertence ao EvoHub; ele atende qualquer projeto e escolhe agente,
+          modelo, fiscal, custo e ambiente conforme a tarefa.
+        </p>
+      </div>
+      <div class="panel warn">
+        <h2>Regra De Seguranca</h2>
+        <p>
+          Acoes de alto risco nao rodam direto. Deploy, escrita em banco,
+          segredo, DNS, exclusao e migracao real precisam de aprovacao explicita
+          e fiscal obrigatorio.
+        </p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Fluxo A Partir De Agora</h2>
+
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h3>Receber o comando</h3>
+          <p>
+            O usuario chama <code>/gerente</code> por Codex, Claude Code,
+            dashboard ou futuramente WhatsApp/audio.
+          </p>
+          <ul>
+            <li>Preservar a intencao original.</li>
+            <li>Identificar se foi automatico, produto ou negocio.</li>
+            <li>Bloquear comando vazio com a mensagem padrao.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h3>Gerar plano no Router V2</h3>
+          <p>
+            Antes de executar, o Router V2 cria um <code>execution_plan</code>.
+          </p>
+          <ul>
+            <li>Classifica area: codigo, visual, infra, data, automacao, seguranca, conteudo, review ou ops.</li>
+            <li>Classifica risco: baixo, medio ou alto.</li>
+            <li>Classifica complexidade: baixa, media ou alta.</li>
+            <li>Define gerente, executor, fiscal e fallback.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h3>Aplicar politica de custo-beneficio</h3>
+          <p>
+            O gerente nao deve escolher o modelo mais barato nem o mais caro por
+            padrao. Ele escolhe o melhor custo-beneficio para a funcao.
+          </p>
+          <ul>
+            <li>Resumo simples: modelo barato/rapido.</li>
+            <li>Frontend e conteudo: modelo eficiente com boa qualidade.</li>
+            <li>Codigo, infra e banco: modelo forte quando o risco subir.</li>
+            <li>Premium so entra com justificativa, falha ou fiscal reprovando.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">4</div>
+        <div>
+          <h3>Mostrar plano antes de executar</h3>
+          <p>
+            Na Fase 2, o <code>/gerente</code> mostra um resumo do plano
+            antes de chamar o gerente e o executor.
+          </p>
+          <ul>
+            <li>Area detectada.</li>
+            <li>Risco e travas.</li>
+            <li>Executor e fiscal.</li>
+            <li>Ferramentas permitidas e bloqueadas.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">5</div>
+        <div>
+          <h3>Executar em lane controlada</h3>
+          <p>
+            Cada tarefa roda em uma faixa de execucao com escopo definido, para
+            evitar agentes se atrapalhando.
+          </p>
+          <ul>
+            <li>Arquivos ou ambientes permitidos.</li>
+            <li>Ferramentas liberadas.</li>
+            <li>Limite de custo.</li>
+            <li>Critério de pronto.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">6</div>
+        <div>
+          <h3>Fiscalizar antes de concluir</h3>
+          <p>
+            O fiscal valida a entrega quando o risco for medio ou alto, ou
+            quando o executor travar.
+          </p>
+          <ul>
+            <li>Verifica escopo.</li>
+            <li>Procura erro tecnico.</li>
+            <li>Confere se houve teste ou verificacao real.</li>
+            <li>Pede fallback quando necessario.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">7</div>
+        <div>
+          <h3>Registrar resultado e aprendizado</h3>
+          <p>
+            Depois da execucao, o gerente grava o que funcionou, custo, falhas,
+            agente usado, modelo usado e qualidade da entrega.
+          </p>
+          <ul>
+            <li>Atualiza ranking interno por funcao.</li>
+            <li>Registra falhas recorrentes.</li>
+            <li>Melhora roteamento futuro.</li>
+            <li>Alimenta dashboard e notificacoes.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Comandos De Teste</h2>
+      <pre>npm run test:router
+npm run router:plan -- "resumir pendencias do projeto"
+npm run router:plan -- "criar landing page moderna com copy e formulario de WhatsApp"
+npm run router:plan -- "planejar migration Supabase com RLS sem aplicar no banco"
+npm run router:plan -- "verificar deploy no Portainer e diagnosticar erro de webhook do WhatsApp sem mexer no banco"</pre>
+    </section>
+
+    <section class="panel">
+      <h2>Mapa De Fases</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fase</th>
+            <th>Entrega</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Fase 1</td>
+            <td>Router V2 dry-run com testes</td>
+            <td>Implementada</td>
+          </tr>
+          <tr>
+            <td>Fase 2</td>
+            <td>Conectar Router V2 ao <code>/gerente</code> antes da execucao</td>
+            <td>Implementada</td>
+          </tr>
+          <tr>
+            <td>Fase 3</td>
+            <td>Fiscal obrigatorio, handoff compacto, fallback e lane real de ferramentas</td>
+            <td>Implementada</td>
+          </tr>
+          <tr>
+            <td>Fase 4</td>
+            <td>Arena interna de modelos e agentes</td>
+            <td>Implementada</td>
+          </tr>
+          <tr>
+            <td>Fase 5</td>
+            <td>Runners por ambiente: repo, Portainer, VPS, Supabase e GitHub</td>
+            <td>Proximo passo</td>
+          </tr>
+          <tr>
+            <td>Fase 6</td>
+            <td>Dashboard, WhatsApp, voz e notificacoes</td>
+            <td>Implementada parcialmente: dashboard, notificacoes e WhatsApp configuravel</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>O Que E A Fase 5</h2>
+      <p>
+        A Fase 5 cria runners por ambiente. O Router V2 decide qual ambiente a
+        tarefa pertence, mas o runner e quem controla como agir naquele ambiente
+        sem misturar responsabilidades.
+      </p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Runner</th>
+            <th>Funcao</th>
+            <th>Limite inicial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>repo_local</code></td>
+            <td>Ler arquivos, aplicar alteracoes e rodar testes no projeto local.</td>
+            <td>Somente dentro da pasta do projeto autorizado.</td>
+          </tr>
+          <tr>
+            <td><code>portainer</code></td>
+            <td>Consultar stacks, containers, logs e status de servicos.</td>
+            <td>Diagnostico primeiro; deploy exige aprovacao.</td>
+          </tr>
+          <tr>
+            <td><code>vps</code></td>
+            <td>Executar diagnosticos remotos seguros em VPS.</td>
+            <td>Comandos destrutivos bloqueados por padrao.</td>
+          </tr>
+          <tr>
+            <td><code>supabase</code></td>
+            <td>Ler schema, validar queries e preparar migrations.</td>
+            <td>Escrita em banco exige aprovacao explicita.</td>
+          </tr>
+          <tr>
+            <td><code>github</code></td>
+            <td>Consultar issues, PRs, checks, CI e historico de mudancas.</td>
+            <td>Merge, push e release exigem gate de revisao.</td>
+          </tr>
+          <tr>
+            <td><code>coolify</code></td>
+            <td>Consultar deploy, logs, health e estado do servico.</td>
+            <td>Redeploy e rollback exigem aprovacao.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="panel">
+      <h2>Fase 6 Implementada</h2>
+      <p>
+        A Fase 6 criou um dashboard local e uma camada de notificacoes. O canal
+        WhatsApp fica pronto para uso com WhatsApp Go/Uazapi via variaveis de
+        ambiente, sem guardar segredo no codigo.
+      </p>
+      <pre>npm run dashboard
+npm run test:notify</pre>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Canal</th>
+            <th>Como funciona</th>
+            <th>Configuração</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>local</code></td>
+            <td>Registra toda notificacao em <code>.agents/notifications.json</code>.</td>
+            <td>Sempre ativo.</td>
+          </tr>
+          <tr>
+            <td><code>webhook</code></td>
+            <td>Envia JSON para um endpoint HTTP externo.</td>
+            <td><code>NOTIFY_WEBHOOK_URL</code> e token opcional.</td>
+          </tr>
+          <tr>
+            <td><code>whatsapp_go</code></td>
+            <td>Envia texto via <code>/send/text</code> com header <code>token</code>.</td>
+            <td><code>WHATSAPP_GO_URL</code>, <code>WHATSAPP_GO_INSTANCE_TOKEN</code>, <code>WHATSAPP_NOTIFY_TO</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

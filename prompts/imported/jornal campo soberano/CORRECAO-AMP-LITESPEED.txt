@@ -1,0 +1,254 @@
+═══════════════════════════════════════════════════════════════
+    ⚡ CORREÇÃO URGENTE: AMP + LITESPEED
+    NEWS SOBERANO v1.3.4
+═══════════════════════════════════════════════════════════════
+
+🎯 PROBLEMA IDENTIFICADO:
+   LiteSpeed Cache estava injetando scripts e CSS nas páginas AMP,
+   causando 55 erros de validação.
+
+═══════════════════════════════════════════════════════════════
+    ✅ CORREÇÕES APLICADAS NO TEMA v1.3.4
+═══════════════════════════════════════════════════════════════
+
+1. ✅ Filtros LiteSpeed executam MUITO CEDO (plugins_loaded)
+2. ✅ Detecta URLs AMP via REQUEST_URI e QUERY_STRING
+3. ✅ Desabilita TODOS os recursos LiteSpeed no AMP:
+   - Buffer finalize
+   - Otimização HTML/CSS/JS
+   - Lazy load
+   - Defer JS/CSS
+   - UCSS (Unused CSS)
+   - CCSS (Critical CSS)
+   - Google Fonts async
+   - Cache
+
+4. ✅ Marca URLs AMP como não-otimizáveis
+
+═══════════════════════════════════════════════════════════════
+    🔧 CONFIGURAÇÃO OBRIGATÓRIA NO LITESPEED CACHE
+═══════════════════════════════════════════════════════════════
+
+PASSO 1: Exclusões de URLs
+──────────────────────────────────────────────────────────────
+
+1. WordPress → LiteSpeed Cache → Cache
+2. Aba "Excludes"
+3. Seção "Do Not Cache URIs"
+4. Adicionar (uma linha por exclusão):
+
+   /amp/
+   /amp
+   /*/amp/
+   /*/amp
+
+5. Seção "Do Not Cache Query Strings"
+6. Adicionar:
+
+   amp
+   amp=1
+
+7. Salvar alterações
+
+PASSO 2: Exclusões de Otimização
+──────────────────────────────────────────────────────────────
+
+1. LiteSpeed Cache → Page Optimization
+2. Aba "Tuning"
+3. Seção "URI Excludes"
+4. Adicionar:
+
+   /amp/
+   /amp
+   /*/amp/
+   /*/amp
+
+5. Seção "JS Excludes"
+6. Adicionar:
+
+   /amp/
+
+7. Seção "CSS Excludes"
+8. Adicionar:
+
+   /amp/
+
+9. Salvar alterações
+
+PASSO 3: Limpar Cache
+──────────────────────────────────────────────────────────────
+
+1. LiteSpeed Cache → Toolbox
+2. Clicar "Purge All"
+3. Aguardar confirmação
+4. Testar AMP novamente
+
+═══════════════════════════════════════════════════════════════
+    🧪 TESTE DE VALIDAÇÃO AMP
+═══════════════════════════════════════════════════════════════
+
+MÉTODO 1: Validador Google
+──────────────────────────────────────────────────────────────
+
+1. Acesse: https://validator.ampproject.org/
+2. Cole: https://jornal.camposoberano.com.br/?amp=1
+3. Clicar "Validate"
+4. Verificar erros (deve ser 0)
+
+MÉTODO 2: Console do Navegador
+──────────────────────────────────────────────────────────────
+
+1. Abrir Chrome
+2. Acessar: https://jornal.camposoberano.com.br/?amp=1#development=1
+3. F12 → Console
+4. Deve mostrar: ✅ "AMP validation successful"
+
+MÉTODO 3: Ver Código Fonte
+──────────────────────────────────────────────────────────────
+
+1. Abrir: https://jornal.camposoberano.com.br/?amp=1
+2. Ctrl+U (view source)
+3. Verificar:
+   ✅ <html ⚡> ou <html amp>
+   ✅ NÃO deve ter: type="litespeed/javascript"
+   ✅ NÃO deve ter: litespeed/css/
+   ✅ NÃO deve ter: data-optimized="2"
+
+═══════════════════════════════════════════════════════════════
+    🔍 DIAGNÓSTICO DE ERROS
+═══════════════════════════════════════════════════════════════
+
+ERRO: "type" is set to "litespeed/javascript"
+──────────────────────────────────────────────────────────────
+CAUSA: LiteSpeed está otimizando a página AMP
+SOLUÇÃO:
+   1. Verificar exclusões configuradas no plugin
+   2. Purge All cache
+   3. Testar novamente
+   4. Tema v1.3.4 já desabilita via código
+
+ERRO: "amp-custom" is missing in tag "style amp-custom"
+──────────────────────────────────────────────────────────────
+CAUSA: Múltiplas tags <style> sem atributo amp-custom
+SOLUÇÃO:
+   1. LiteSpeed combinando CSS incorretamente
+   2. Desabilitar CSS Combine para AMP (já excluído)
+   3. Tema v1.3.4 já desabilita via código
+
+ERRO: "href" in "link rel=stylesheet" is invalid
+──────────────────────────────────────────────────────────────
+CAUSA: LiteSpeed gerando CSS combinado
+SOLUÇÃO:
+   1. Desabilitar CSS Combine para URLs AMP
+   2. Adicionar /amp/ nas exclusões
+   3. Tema v1.3.4 já desabilita via código
+
+ERRO: Parent tag of "script" is "body", should be "head"
+──────────────────────────────────────────────────────────────
+CAUSA: LiteSpeed injetando scripts no rodapé
+SOLUÇÃO:
+   1. Desabilitar JS Defer para AMP
+   2. Adicionar exclusões de JS
+   3. Tema v1.3.4 já desabilita via código
+
+ERRO: "target" is missing in tag "form"
+──────────────────────────────────────────────────────────────
+CAUSA: Forms sem atributo target="_top" ou "_blank"
+SOLUÇÃO:
+   1. Adicionar amp-form extension
+   2. Adicionar target="_top" nos forms
+   3. Será corrigido no próximo update
+
+═══════════════════════════════════════════════════════════════
+    📋 CHECKLIST COMPLETO
+═══════════════════════════════════════════════════════════════
+
+TEMA v1.3.4:
+☑ Filtros LiteSpeed desabilitados no AMP (functions.php)
+☑ Detecção de URL AMP via REQUEST_URI
+☑ Prioridade 1 no hook plugins_loaded
+☑ Todos os recursos LiteSpeed desabilitados
+
+PLUGIN LITESPEED:
+☐ Exclusões de cache configuradas
+☐ Exclusões de otimização configuradas
+☐ Cache limpo (Purge All)
+☐ Testado após limpeza
+
+VALIDAÇÃO AMP:
+☐ Validador Google: 0 erros
+☐ Console: "AMP validation successful"
+☐ Código fonte sem litespeed/javascript
+☐ Código fonte sem litespeed/css
+
+═══════════════════════════════════════════════════════════════
+    ⚠️ IMPORTANTE
+═══════════════════════════════════════════════════════════════
+
+1. **SEMPRE limpar cache após mudanças**
+   LiteSpeed Cache → Toolbox → Purge All
+
+2. **Testar em modo incógnito**
+   Evita cache do navegador
+
+3. **Verificar .htaccess**
+   Se usar modo Standard, .htaccess pode interferir
+
+4. **Modo Paired é OBRIGATÓRIO**
+   Não usar Standard mode com LiteSpeed Cache
+
+5. **Desabilitar outros plugins de cache**
+   Apenas LiteSpeed Cache deve estar ativo
+
+═══════════════════════════════════════════════════════════════
+    🆘 SE AINDA HOUVER ERROS
+═══════════════════════════════════════════════════════════════
+
+1. **Desabilitar LiteSpeed temporariamente**
+   - Desativar plugin LiteSpeed Cache
+   - Testar AMP
+   - Se funcionar, problema é nas exclusões
+
+2. **Verificar outros plugins**
+   - Desabilitar todos plugins exceto AMP
+   - Testar
+   - Reativar um por um
+
+3. **Modo de compatibilidade**
+   - LiteSpeed Cache → Settings
+   - Backend → Compatibility
+   - Marcar "Disable All Features"
+
+4. **Suporte LiteSpeed**
+   - https://wordpress.org/support/plugin/litespeed-cache/
+
+═══════════════════════════════════════════════════════════════
+    📊 RESULTADOS ESPERADOS
+═══════════════════════════════════════════════════════════════
+
+APÓS CONFIGURAÇÃO CORRETA:
+
+✅ AMP Validator: 0 erros
+✅ Console: "AMP validation successful"
+✅ Código fonte limpo (sem litespeed/javascript)
+✅ Velocidade AMP mantida
+✅ Google Search Console: 0 erros AMP
+✅ Rich Results Test: Válido
+
+PERFORMANCE:
+
+- Tempo de carregamento AMP: < 0.5s
+- First Contentful Paint: < 1s
+- Largest Contentful Paint: < 1.5s
+- Cumulative Layout Shift: < 0.1
+- Total Blocking Time: < 100ms
+
+═══════════════════════════════════════════════════════════════
+
+Data: 11 de Dezembro de 2025
+Versão: 1.3.4
+Correções AMP + LiteSpeed aplicadas ✅
+
+⚡ Siga o passo a passo e teste!
+
+═══════════════════════════════════════════════════════════════

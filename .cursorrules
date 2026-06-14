@@ -1,0 +1,130 @@
+# Diretrizes de Desenvolvimento de IA & Copilot (Regras Absolutas)
+# ============================================================
+
+## Quem sou eu
+Desenvolvedor full-stack brasileiro trabalhando com clientes nos setores odontológico, educacional e agronegócio. Meus projetos principais são Dental Juá, MultiPost, Campo Soberano e Glênio Fitness.
+
+## Stack principal
+
+### Frontend
+- React (componentes funcionais + hooks) e HTML/CSS puro para landing pages
+- Tailwind CSS para projetos React; CSS custom com variáveis para landing pages
+- Design mobile-first com glassmorphism, animações CSS suaves
+- Meta Pixel, Google Tag Manager para rastreamento
+- WhatsApp como canal principal de conversão (links `wa.me`)
+- Geração de PDF com `html2pdf.js`
+
+### Backend
+- Node.js com ES Modules (`import/export`, nunca `require`)
+- APIs REST com Express ou n8n HTTP nodes
+- Autenticação com JWT e validação de webhooks por HMAC
+
+### Automação — n8n self-hosted v2.16.1
+- Sempre usar `$json` para acessar dados no node atual
+- Para HTTP Requests: `body` como JSON object (não string)
+- Credenciais por nome: `{{ $credentials.NomeDaCredencial }}`
+- Para loops: usar Split In Batches, não JavaScript puro
+- Timeout em chamadas externas: sempre definir (mínimo 30s)
+- Tratar erros com nós "Error Trigger" e notificar via WhatsApp
+
+### Banco de dados — Supabase (PostgreSQL)
+- Sempre usar RLS (Row Level Security) em tabelas com dados de usuário
+- Nomear tabelas em snake_case: `dental_products`, `lead_submissions`
+- Usar `uuid` como PK padrão: `id uuid primary key default gen_random_uuid()`
+- Timestamps: `created_at timestamptz default now()`, `updated_at timestamptz default now()`
+- pgvector habilitado para buscas semânticas
+- Queries complexas em funções SQL (não no código da aplicação)
+
+### Cache e filas — Redis
+- Debounce de mensagens WhatsApp: chave `debounce:${telefone}`, TTL 3s
+- Sessões de usuário: chave `session:${userId}`, TTL 24h
+- Nunca guardar dados sensíveis sem criptografia
+
+### Infraestrutura
+- Docker Swarm com Portainer para gerenciamento visual
+- Traefik como proxy reverso com SSL automático (Let's Encrypt)
+- Cloudflare para DNS, CDN e R2 para storage de arquivos
+- Hostinger para sites estáticos e landing pages simples
+- Variáveis de ambiente via Docker secrets ou arquivo `.env` (nunca hardcoded)
+
+### WhatsApp — Evolution API
+- Sempre validar que o número está no formato internacional: `5511999999999`
+- Mensagens de texto: endpoint `/message/sendText`
+- Para fluxos complexos: WhatsApp Flows v7.3
+- Usar debounce Redis para agregar mensagens antes de processar
+
+### IA e LLMs
+- Claude (Anthropic) como modelo principal via API
+- Gemini via LangChain para workflows n8n
+- Embeddings: pgvector no Supabase para memória semântica
+- Sempre incluir system prompt claro com contexto do negócio
+
+## Padrões de código
+
+### Nomenclatura
+```
+variáveis/funções: camelCase
+constantes:        UPPER_SNAKE_CASE
+arquivos:          kebab-case.js
+classes:           PascalCase
+tabelas DB:        snake_case
+```
+
+### JavaScript/Node.js
+```js
+// ✅ Sempre ES Modules
+import { createClient } from '@supabase/supabase-js'
+
+// ✅ Async/await com try-catch
+async function buscarProduto(id) {
+  try {
+    const { data, error } = await supabase.from('products').select('*').eq('id', id).single()
+    if (error) throw error
+    return data
+  } catch (err) {
+    console.error('Erro ao buscar produto:', err.message)
+    throw err
+  }
+}
+```
+
+## Regras absolutas
+
+1. **Nunca** usar `var` — sempre `const` ou `let`
+2. **Nunca** hardcodar credenciais, URLs de produção ou chaves de API no código
+3. **Sempre** tratar erros explicitamente (nunca swallow silencioso)
+4. **Sempre** comentar em português no código dos projetos clientes
+5. **Sempre** validar dados de entrada antes de salvar no banco
+6. **Nunca** usar `SELECT *` em produção — listar colunas explicitamente
+7. **Sempre** usar HTTPS em produção — nunca HTTP
+8. **Sempre** configurar CORS restritivo em APIs
+9. **Nunca** logar dados sensíveis (CPF, telefone, senha) mesmo em desenvolvimento
+10. **Sempre** fazer backup antes de migrations em produção
+
+## Tom e comunicação
+- Comentários de código em português brasileiro
+- Nomes de variáveis em inglês (padrão da indústria)
+- Mensagens de commit in português: `feat: adiciona busca por semestre`
+- Logs informativos: `console.log('✅ Produto encontrado:', produto.nome)`
+- Logs de erro: `console.error('❌ Falha ao conectar Redis:', err.message)`
+
+## Comando padrão `/gerente`
+
+Quando o usuário usar o prefixo `/gerente`, siga o contrato:
+
+1. `/gerente <tarefa>` → roteamento automático
+2. `/gerente produto <tarefa>` → força `gerente_produto`
+3. `/gerente negocio <tarefa>` → força `gerente_negocio`
+4. `/gerente ajuda` → mostrar instruções de uso
+
+Se faltar tarefa, responder com:
+`Use: /gerente <tarefa> | /gerente produto <tarefa> | /gerente negocio <tarefa> | /gerente ajuda`
+
+## Especialização GitHub do gerente
+
+Quando a tarefa mencionar GitHub, aplicar estes papéis:
+
+- Triagem de issues/backlog/milestones → `github_triagem`
+- Comentários de review/threads de PR → `github_reviews`
+- Falhas de CI/workflows/actions → `github_ci`
+- Versionamento/changelog/release → `release_ops`

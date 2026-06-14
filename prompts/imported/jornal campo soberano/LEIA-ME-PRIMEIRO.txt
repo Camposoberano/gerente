@@ -1,0 +1,78 @@
+═══════════════════════════════════════════════════════════════
+    TEMA NEWS SOBERANO - JORNAL CAMPO SOBERANO
+═══════════════════════════════════════════════════════════════
+
+📦 ARQUIVOS PRONTOS PARA INSTALAÇÃO
+
+✅ news-soberano.zip
+   → Este é o arquivo que você vai fazer upload no WordPress!
+   → Tamanho otimizado e pronto para uso
+   → Contém o tema completo
+
+✅ news-soberano/ (pasta)
+   → Código fonte do tema
+   → Use para referência ou modificações futuras
+
+✅ INSTRUCOES-DE-INSTALACAO.md
+   → Guia completo passo a passo
+   → Leia antes de instalar!
+
+═══════════════════════════════════════════════════════════════
+    COMO INSTALAR (RESUMO RÁPIDO)
+═══════════════════════════════════════════════════════════════
+
+1️⃣ Acesse seu WordPress:
+   jornal.camposoberano.com.br/wp-admin
+
+2️⃣ Vá em:
+   Aparência → Temas → Adicionar novo → Enviar tema
+
+3️⃣ Escolha o arquivo:
+   news-soberano.zip
+
+4️⃣ Clique em:
+   "Instalar agora" → depois em "Ativar"
+
+5️⃣ Configure:
+   Aparência → Personalizar
+
+═══════════════════════════════════════════════════════════════
+    O QUE O TEMA TEM
+═══════════════════════════════════════════════════════════════
+
+✨ Design moderno estilo G1
+🎨 Cores verde e marrom personalizadas
+📱 Totalmente responsivo
+🌙 Modo escuro/claro
+⚡ Otimizado para velocidade
+🔍 SEO otimizado (Rank Math)
+📊 AMP pronto (páginas ultra-rápidas)
+🚀 Compatível com WP Rocket
+📈 Sistema de posts populares
+🔗 Compartilhamento social
+⏱️  Tempo de leitura
+👁️  Contador de visualizações
+
+═══════════════════════════════════════════════════════════════
+    IMPORTANTE
+═══════════════════════════════════════════════════════════════
+
+⚠️ Mantenha o WP Rocket e Rank Math ativos
+⚠️ Configure o menu em: Aparência → Menus
+⚠️ Adicione widgets em: Aparência → Widgets
+⚠️ Leia INSTRUCOES-DE-INSTALACAO.md para mais detalhes
+
+═══════════════════════════════════════════════════════════════
+    SUPORTE
+═══════════════════════════════════════════════════════════════
+
+📧 Para dúvidas, consulte:
+   → INSTRUCOES-DE-INSTALACAO.md (guia completo)
+   → news-soberano/README.md (documentação técnica)
+
+═══════════════════════════════════════════════════════════════
+
+Tema desenvolvido especialmente para Jornal Campo Soberano
+Versão 1.0.0 | Dezembro 2025
+
+Bom trabalho! 🚀

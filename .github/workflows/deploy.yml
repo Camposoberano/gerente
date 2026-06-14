@@ -1,0 +1,94 @@
+# .github/workflows/deploy.yml
+# Deploy automático via GitHub Actions - Pilar 4
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # permite rodar manualmente pela UI do GitHub
+
+jobs:
+
+  # ── JOB 1: Verificação de qualidade ──────────────────────────────────────
+  quality-check:
+    name: Verificação de qualidade
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar variáveis de ambiente necessárias
+        run: |
+          echo "Verificando configurações..."
+          [ -f ".env.example" ] && echo "✅ .env.example encontrado" || echo "⚠️  .env.example ausente"
+          [ -f "package.json" ] && echo "✅ package.json encontrado"
+
+  # ── JOB 2: Deploy via SSH para VPS ───────────────────────────────────────
+  deploy-vps:
+    name: Deploy para VPS
+    runs-on: ubuntu-latest
+    needs: quality-check
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:     ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key:      ${{ secrets.VPS_SSH_KEY }}
+          port:     ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            echo "🚀 Iniciando deploy..."
+
+            cd ${{ secrets.DEPLOY_PATH || '/opt/agent-team' }}
+
+            echo "📥 Atualizando código..."
+            git pull origin main
+
+            echo "📦 Instalando dependências..."
+            npm ci --production
+
+            echo "🔄 Reiniciando serviço..."
+            pm2 restart agent-team 2>/dev/null || pm2 start orchestrator.js --name agent-team
+
+            echo "✅ Deploy concluído!"
+            pm2 status agent-team
+
+  # ── JOB 3: Notificação WhatsApp (opcional) ───────────────────────────────
+  notify-whatsapp:
+    name: Notificar via WhatsApp
+    runs-on: ubuntu-latest
+    needs: deploy-vps
+    if: always()
+
+    steps:
+      - name: Enviar notificação
+        if: ${{ secrets.EVOLUTION_API_URL != '' }}
+        run: |
+          STATUS="${{ needs.deploy-vps.result }}"
+          EMOJI="✅"
+          [ "$STATUS" == "failure" ] && EMOJI="❌"
+
+          MESSAGE="${EMOJI} Deploy agent-team\nStatus: ${STATUS}\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.event.head_commit.message }}"
+
+          curl -s -X POST "${{ secrets.EVOLUTION_API_URL }}/message/sendText" \
+            -H "apikey: ${{ secrets.EVOLUTION_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"number\": \"${{ secrets.NOTIFY_PHONE }}\",
+              \"text\": \"${MESSAGE}\"
+            }"
