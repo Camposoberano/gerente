@@ -220,20 +220,22 @@ async function whatsappInbound(req, res) {
     text = normalizeGerenteCommand(text);
     const commandText = text.toLowerCase();
 
-    if (incoming.fromMe || !text || !commandText.startsWith("/gerente")) {
+    if (!text || !commandText.startsWith("/gerente")) {
       recordNotification({
         type: "whatsapp_inbound_ignored",
         title: "Mensagem ignorada via WhatsApp",
         channel: "whatsapp_go",
         from: incoming.from,
         message: text.slice(0, 200),
-        reason: incoming.fromMe ? "from_me" : (!text ? "empty" : "not_gerente_command"),
+        reason: !text ? "empty" : "not_gerente_command",
+        from_me: incoming.fromMe,
+        audio_detected: isAudioMessage(incoming),
       });
 
       return json(res, {
         ok: true,
         ignored: true,
-        reason: incoming.fromMe ? "from_me" : (!text ? "empty" : "not_gerente_command"),
+        reason: !text ? "empty" : "not_gerente_command",
       });
     }
 
@@ -247,9 +249,11 @@ async function whatsappInbound(req, res) {
       title: "Mensagem recebida via WhatsApp",
       channel: "whatsapp_go",
       from: incoming.from,
-      message: incoming.text,
+      message: text,
       result_kind: result.kind,
       task_id: result.plan?.task_id || null,
+      from_me: incoming.fromMe,
+      audio_detected: isAudioMessage(incoming),
     });
 
     let delivery = { ok: false, skipped: true, reason: "whatsapp_go_not_configured" };
