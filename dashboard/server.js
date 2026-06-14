@@ -137,6 +137,8 @@ function extractWhatsAppMessage(payload) {
   const message = payload?.message && typeof payload.message === "object" ? payload.message : {};
   const content = message?.content && typeof message.content === "object" ? message.content : {};
   return {
+    id: message.id || null,
+    messageid: message.messageid || null,
     text: message.text || content.text || deepFindString(payload, ["text", "body", "caption", "conversation"]) || "",
     from: message.sender || deepFindString(payload, ["from", "number", "phone", "sender", "remoteJid", "participant"]) || null,
     chat: message.chatid || payload?.chat?.wa_chatid || deepFindString(payload, ["remoteJid", "chatId", "chat_id", "jid", "groupJid", "groupjid"]) || null,
@@ -180,16 +182,20 @@ function isAudioMessage(incoming) {
 }
 
 async function transcribeAudio(incoming, env = process.env) {
-  if (!env.OPENAI_API_KEY || !incoming.mediaUrl || !isAudioMessage(incoming)) return null;
+  if (!env.OPENAI_API_KEY || !isAudioMessage(incoming)) return null;
 
-  const mediaResponse = await fetch(incoming.mediaUrl, {
+  const downloaded = await downloadUazapiMedia(incoming, env);
+  const mediaUrl = downloaded.url || incoming.mediaUrl;
+  if (!mediaUrl) return null;
+
+  const mediaResponse = await fetch(mediaUrl, {
     headers: {
       token: env.WHATSAPP_GO_INSTANCE_TOKEN || env.UAZAPI_INSTANCE_TOKEN || "",
     },
   });
   if (!mediaResponse.ok) throw new Error(`audio_download_failed_${mediaResponse.status}`);
 
-  const contentType = mediaResponse.headers.get("content-type") || incoming.mimeType || "audio/ogg";
+  const contentType = mediaResponse.headers.get("content-type") || downloaded.mimetype || incoming.mimeType || "audio/ogg";
   const extension = contentType.includes("mpeg") ? "mp3"
     : contentType.includes("mp4") ? "m4a"
       : contentType.includes("wav") ? "wav"
@@ -210,6 +216,31 @@ async function transcribeAudio(incoming, env = process.env) {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(`audio_transcription_failed_${response.status}`);
   return String(data.text || "").trim() || null;
+}
+
+async function downloadUazapiMedia(incoming, env = process.env) {
+  const baseUrl = String(env.WHATSAPP_GO_URL || env.UAZAPI_URL || "").replace(/\/+$/, "");
+  const token = env.WHATSAPP_GO_INSTANCE_TOKEN || env.UAZAPI_INSTANCE_TOKEN || "";
+  if (!baseUrl || !token || !incoming.id) return {};
+
+  const response = await fetch(`${baseUrl}/message/download`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      token,
+    },
+    body: JSON.stringify({
+      id: incoming.id,
+      messageid: incoming.messageid,
+      chatid: incoming.chat,
+    }),
+  });
+  if (!response.ok) return {};
+  const data = await response.json().catch(() => ({}));
+  return {
+    url: data.fileURL || data.fileUrl || data.url || null,
+    mimetype: data.mimetype || data.mimeType || null,
+  };
 }
 
 async function whatsappInbound(req, res) {
