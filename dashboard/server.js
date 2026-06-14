@@ -6,7 +6,7 @@ import { readArenaRuns, buildArenaRanking } from "../arena/store.js";
 import { readNotifications } from "../notifications/store.js";
 import { recordNotification } from "../notifications/store.js";
 import { sendWhatsAppGoMessage, whatsappGoConfigured } from "../notifications/whatsapp-go.js";
-import { handleGerenteCommand } from "../gerente/command.js";
+import { handleGerenteCommandSmart } from "../gerente/command.js";
 
 const PORT = Number(process.env.GERENTE_DASHBOARD_PORT || 8787);
 const HOST = process.env.GERENTE_DASHBOARD_HOST || "127.0.0.1";
@@ -291,9 +291,10 @@ async function whatsappInbound(req, res) {
       });
     }
 
-    const result = handleGerenteCommand({
+    const result = await handleGerenteCommandSmart({
       text,
       requestedBy: incoming.from ? `whatsapp:${incoming.from}` : "whatsapp",
+      env: process.env,
     });
 
     recordNotification({

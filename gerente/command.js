@@ -1,5 +1,6 @@
 import { createExecutionPlan } from "../router/v2.js";
 import { AGENTS, AGENTE_IDS, GERENTE_IDS } from "../agents/definitions.js";
+import { interpretGerenteWithGemini } from "./gemini-conversation.js";
 
 export function gerenteUsage() {
   return [
@@ -176,4 +177,49 @@ export function handleGerenteCommand({ text, project = null, requestedBy = "what
     plan,
     message: summarizeExecutionPlan(plan),
   };
+}
+
+export async function handleGerenteCommandSmart({ text, project = null, requestedBy = "whatsapp", env = process.env, fetchImpl = fetch }) {
+  const parsed = parseGerenteText(text);
+  if (parsed.type === "empty" || parsed.type === "help") {
+    return { ok: true, kind: parsed.type, message: parsed.message };
+  }
+
+  const firstToken = normalizeToken(String(text || "").trim().split(/\s+/)[1] || "");
+  const forcedTask = parsed.type === "task" && ["executar", "fazer", "produto", "negocio"].includes(firstToken);
+
+  if (!forcedTask) {
+    const gemini = await interpretGerenteWithGemini({
+      text: String(text || "").replace(/^\/gerente\s*/i, "").trim(),
+      env,
+      fetchImpl,
+    }).catch(() => null);
+
+    if (gemini?.kind === "chat" && gemini.message) {
+      return {
+        ok: true,
+        kind: "chat",
+        message: gemini.message,
+        parsed: { ...parsed, source: "gemini" },
+      };
+    }
+
+    if (gemini?.kind === "task" && gemini.task) {
+      const plan = createExecutionPlan({
+        task: gemini.task,
+        project,
+        requestedBy,
+      });
+      if (gemini.manager) plan.manager = gemini.manager;
+      return {
+        ok: true,
+        kind: "plan",
+        parsed: { ...parsed, task: gemini.task, source: "gemini" },
+        plan,
+        message: summarizeExecutionPlan(plan),
+      };
+    }
+  }
+
+  return handleGerenteCommand({ text, project, requestedBy });
 }
