@@ -7,6 +7,7 @@ import { readNotifications } from "../notifications/store.js";
 import { recordNotification } from "../notifications/store.js";
 import { sendWhatsAppGoMessage, whatsappGoConfigured } from "../notifications/whatsapp-go.js";
 import { handleGerenteCommandSmart } from "../gerente/command.js";
+import { normalizeGerenteCommand } from "./whatsapp-command.js";
 
 const PORT = Number(process.env.GERENTE_DASHBOARD_PORT || 8787);
 const HOST = process.env.GERENTE_DASHBOARD_HOST || "127.0.0.1";
@@ -156,21 +157,6 @@ function whatsappReplyTarget(incoming, env = process.env) {
   return env.GERENTE_WHATSAPP_GROUP_JID || incoming.chat || incoming.from || env.WHATSAPP_NOTIFY_TO;
 }
 
-function normalizeGerenteCommand(text = "") {
-  const value = String(text || "").trim();
-  const normalized = value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-  if (normalized.startsWith("/gerente")) return value;
-  if (normalized === "gerente") return "/gerente ajuda";
-  const gerenteMatch = value.match(/^(gerente|gelente|gerenti|jerente)[\s,.:;-]+(.+)$/i);
-  if (gerenteMatch) return `/gerente ${gerenteMatch[2].trim()}`;
-  const barraGerenteMatch = value.match(/^barra\s+(gerente|gelente|gerenti|jerente)[\s,.:;-]+(.+)$/i);
-  if (barraGerenteMatch) return `/gerente ${barraGerenteMatch[2].trim()}`;
-  return value;
-}
-
 function isAudioMessage(incoming) {
   const mime = String(incoming.mimeType || "").toLowerCase();
   const url = String(incoming.mediaUrl || "").toLowerCase();
@@ -256,7 +242,12 @@ async function whatsappInbound(req, res) {
     const raw = await readRequestBody(req);
     const payload = raw ? JSON.parse(raw) : {};
     const incoming = extractWhatsAppMessage(payload);
+    if (incoming.fromMe) {
+      return json(res, { ok: true, ignored: true, reason: "from_me" });
+    }
+
     let text = String(incoming.text || "").trim();
+    const originalText = text;
     let transcriptionError = null;
     const audioDetected = isAudioMessage(incoming);
     if (!text && audioDetected) {
@@ -303,10 +294,14 @@ async function whatsappInbound(req, res) {
       channel: "whatsapp_go",
       from: incoming.from,
       message: text,
+      original_message: originalText || null,
+      response_preview: String(result.message || "").slice(0, 500),
       result_kind: result.kind,
       task_id: result.plan?.task_id || null,
       from_me: incoming.fromMe,
       audio_detected: audioDetected,
+      transcribed: audioDetected && Boolean(text),
+      transcription_error: transcriptionError,
     });
 
     let delivery = { ok: false, skipped: true, reason: "whatsapp_go_not_configured" };
