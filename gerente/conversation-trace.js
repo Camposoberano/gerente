@@ -20,6 +20,15 @@ function modelLabel(modelId) {
 }
 
 export function buildConversationTrace(result = {}) {
+  const usage = result.usage || null;
+  const usageFields = usage ? {
+    usage_provider: usage.provider || null,
+    usage_model: usage.model || null,
+    input_tokens: Number(usage.input_tokens || 0),
+    output_tokens: Number(usage.output_tokens || 0),
+    total_tokens: Number(usage.total_tokens || 0),
+  } : {};
+
   if (result.plan) {
     const agentId = result.plan.primary?.agent_id || null;
     const modelId = result.plan.model_policy?.preferred_model || null;
@@ -29,6 +38,7 @@ export function buildConversationTrace(result = {}) {
       llm_id: modelId,
       llm_label: modelLabel(modelId),
       response_source: "execution_plan",
+      ...usageFields,
     };
   }
 
@@ -46,5 +56,6 @@ export function buildConversationTrace(result = {}) {
     llm_id: mapped.llm_id,
     llm_label: mapped.llm_label || modelLabel(mapped.llm_id),
     response_source: source,
+    ...usageFields,
   };
 }

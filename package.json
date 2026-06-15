@@ -16,6 +16,7 @@
     "firecrawl:health": "node scripts/firecrawl-health.js",
     "jina:health": "node scripts/jina-health.js",
     "github:health": "node scripts/github-health.js",
+    "gerente:diagnose": "node scripts/gerente-runtime-diagnose.js",
     "uazapi:group:create": "node scripts/uazapi-group-create.js",
     "uazapi:webhook:gerente": "node scripts/uazapi-set-gerente-webhook.js",
     "openrouter:free": "node scripts/openrouter-free-models.js",

@@ -215,6 +215,7 @@ export async function handleGerenteCommandSmart({ text, project = null, requeste
         ok: true,
         kind: "chat",
         message: gemini.message,
+        usage: gemini.usage || null,
         parsed: { ...parsed, source: "gemini" },
       };
     }
@@ -231,6 +232,7 @@ export async function handleGerenteCommandSmart({ text, project = null, requeste
         kind: "plan",
         parsed: { ...parsed, task: gemini.task, source: "gemini" },
         plan,
+        usage: gemini.usage || null,
         message: summarizeExecutionPlan(plan),
       };
     }

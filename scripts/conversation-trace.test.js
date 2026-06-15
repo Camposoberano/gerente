@@ -22,4 +22,27 @@ assert.equal(planTrace.response_source, "execution_plan");
 assert.ok(planTrace.agent_id);
 assert.ok(planTrace.llm_id);
 
+const geminiChat = await handleGerenteCommandSmart({
+  text: "/gerente voce esta me ouvindo?",
+  env: { GEMINI_API_KEY: "test-key" },
+  fetchImpl: async () => ({
+    ok: true,
+    json: async () => ({
+      candidates: [{ content: { parts: [{ text: JSON.stringify({ kind: "chat", message: "Sim, estou ouvindo.", task: "", manager: null }) }] } }],
+      usageMetadata: {
+        promptTokenCount: 120,
+        candidatesTokenCount: 15,
+        totalTokenCount: 135,
+      },
+    }),
+  }),
+});
+const geminiTrace = buildConversationTrace(geminiChat);
+assert.equal(geminiTrace.response_source, "gemini");
+assert.equal(geminiTrace.usage_provider, "gemini");
+assert.equal(geminiTrace.usage_model, "gemini-2.5-flash");
+assert.equal(geminiTrace.input_tokens, 120);
+assert.equal(geminiTrace.output_tokens, 15);
+assert.equal(geminiTrace.total_tokens, 135);
+
 console.log("conversation trace tests passed");

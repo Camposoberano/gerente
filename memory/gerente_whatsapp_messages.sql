@@ -14,11 +14,23 @@ create table if not exists public.gerente_whatsapp_messages (
   llm_id text,
   llm_label text,
   response_source text,
+  usage_provider text,
+  usage_model text,
+  input_tokens integer not null default 0,
+  output_tokens integer not null default 0,
+  total_tokens integer not null default 0,
   audio_detected boolean not null default false,
   transcribed boolean not null default false,
   transcription_error text,
   metadata jsonb not null default '{}'::jsonb
 );
+
+alter table public.gerente_whatsapp_messages
+  add column if not exists usage_provider text,
+  add column if not exists usage_model text,
+  add column if not exists input_tokens integer not null default 0,
+  add column if not exists output_tokens integer not null default 0,
+  add column if not exists total_tokens integer not null default 0;
 
 alter table public.gerente_whatsapp_messages enable row level security;
 

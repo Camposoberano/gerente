@@ -67,5 +67,12 @@ export async function interpretGerenteWithGemini({ text, env = process.env, fetc
     message: String(parsed.message || "").trim(),
     task: String(parsed.task || "").trim(),
     manager: parsed.manager === "gerente_produto" || parsed.manager === "gerente_negocio" ? parsed.manager : null,
+    usage: {
+      provider: "gemini",
+      model: "gemini-2.5-flash",
+      input_tokens: Number(data.usageMetadata?.promptTokenCount || 0),
+      output_tokens: Number(data.usageMetadata?.candidatesTokenCount || 0),
+      total_tokens: Number(data.usageMetadata?.totalTokenCount || 0),
+    },
   };
 }

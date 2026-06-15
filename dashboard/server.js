@@ -80,6 +80,14 @@ function latestError(notifications, conversations) {
   return null;
 }
 
+function usageTotals(conversations) {
+  return conversations.reduce((totals, item) => ({
+    input_tokens: totals.input_tokens + Number(item.input_tokens || 0),
+    output_tokens: totals.output_tokens + Number(item.output_tokens || 0),
+    total_tokens: totals.total_tokens + Number(item.total_tokens || 0),
+  }), { input_tokens: 0, output_tokens: 0, total_tokens: 0 });
+}
+
 async function summary() {
   const arenaRuns = readArenaRuns();
   const ranking = buildArenaRanking();
@@ -91,6 +99,7 @@ async function summary() {
     env: process.env,
   });
   const whatsappConversations = conversationResult.items;
+  const usage = usageTotals(whatsappConversations);
   const storeHealth = await checkConversationStoreHealth(process.env);
   const lastRun = arenaRuns.at(-1) || null;
 
@@ -101,7 +110,9 @@ async function summary() {
       notifications: allNotifications.length,
       outputs: latestOutputs(1000).length,
       whatsapp_conversations: whatsappConversations.length,
+      total_tokens: usage.total_tokens,
     },
+    usage,
     health: {
       generated_at: new Date().toISOString(),
       providers: providerHealth(process.env).map((item) => item.id === "supabase" ? { ...item, ...storeHealth } : item),
@@ -367,6 +378,11 @@ async function whatsappInbound(req, res) {
         mime_type: incoming.mimeType,
         message_type: incoming.messageType,
         media_type: incoming.mediaType,
+        usage_provider: trace.usage_provider || null,
+        usage_model: trace.usage_model || null,
+        input_tokens: trace.input_tokens || 0,
+        output_tokens: trace.output_tokens || 0,
+        total_tokens: trace.total_tokens || 0,
       },
     }, process.env);
 
@@ -589,7 +605,7 @@ function page() {
         <div class="kpi"><div class="label">Conversas WhatsApp</div><div class="value" id="whatsappCount">0</div><div class="sub" id="conversationSource">historico local</div></div>
         <div class="kpi"><div class="label">Runs Arena</div><div class="value" id="runs">0</div><div class="sub">modelos pontuados</div></div>
         <div class="kpi"><div class="label">Outputs</div><div class="value" id="outputs">0</div><div class="sub">artefatos gerados</div></div>
-        <div class="kpi"><div class="label">Provedores OK</div><div class="value" id="providersOk">0</div><div class="sub">tokens e servicos</div></div>
+        <div class="kpi"><div class="label">Tokens rastreados</div><div class="value" id="tokensTotal">0</div><div class="sub" id="tokensSplit">entrada/saida</div></div>
       </section>
 
       <section class="layout">
@@ -666,6 +682,9 @@ function page() {
       const audio = item.audio_detected ? badge(item.transcribed ? "audio transcrito" : "audio", item.transcription_error ? "danger" : "") : badge("texto");
       const kind = badge(item.result_kind || "sem tipo", item.result_kind === "plan" ? "warn" : "");
       const error = item.transcription_error ? "<p>" + badge("erro transcricao", "danger") + " <span class='muted'>" + esc(item.transcription_error) + "</span></p>" : "";
+      const usage = Number(item.total_tokens || 0) > 0
+        ? "<div class='box'><strong>Tokens</strong><div>" + esc(item.total_tokens) + " total · " + esc(item.input_tokens || 0) + " in · " + esc(item.output_tokens || 0) + " out<br>" + esc(item.usage_model || item.llm_label || "") + "</div></div>"
+        : "";
       return [
         "<div class='conversation'>",
         "<div class='conversation-head'><div>" + kind + audio + "</div><span class='chip'>" + esc(item.created_at) + "</span></div>",
@@ -676,6 +695,7 @@ function page() {
         "<div class='box'><strong>Origem</strong><div>" + esc(item.from || "desconhecida") + (item.task_id ? "<br>Task: " + esc(item.task_id) : "") + "</div></div>",
         "<div class='box'><strong>Agente / LLM</strong><div>" + esc(item.agent_name || item.agent_id || "nao identificado") + "<br>" + esc(item.llm_label || item.llm_id || "nao identificado") + "</div></div>",
         "<div class='box'><strong>Fonte</strong><div>" + esc(item.response_source || "nao identificado") + "</div></div>",
+        usage,
         "</div>",
         error,
         "</div>"
@@ -694,9 +714,10 @@ function page() {
       document.getElementById("notifications").textContent = data.totals.notifications;
       document.getElementById("outputs").textContent = data.totals.outputs;
       document.getElementById("whatsappCount").textContent = data.totals.whatsapp_conversations;
+      document.getElementById("tokensTotal").textContent = data.totals.total_tokens || 0;
+      document.getElementById("tokensSplit").textContent = (data.usage.input_tokens || 0) + " in / " + (data.usage.output_tokens || 0) + " out";
       document.getElementById("conversationSource").textContent = "historico: " + text(data.health.conversation_source);
       document.getElementById("conversationChip").textContent = text(data.health.conversation_source);
-      document.getElementById("providersOk").textContent = data.health.providers.filter((p) => p.ok).length;
       document.getElementById("whatsappRows").innerHTML = data.whatsapp_conversations.slice(0, 6).map(conversationCard).join("") || "<p class='muted'>Sem conversas.</p>";
       document.getElementById("healthRows").innerHTML = [
         ...(data.health.last_error ? ["<div class='health-item'>" + badge("ultimo erro", "danger") + "<strong>Alerta recente</strong><span>" + esc(data.health.last_error) + "</span></div>"] : []),
