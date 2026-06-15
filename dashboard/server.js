@@ -10,6 +10,7 @@ import { handleGerenteCommandSmart } from "../gerente/command.js";
 import { buildConversationTrace } from "../gerente/conversation-trace.js";
 import { checkConversationStoreHealth, readWhatsAppConversations, recordWhatsAppConversation, supabaseConversationConfigured } from "./conversation-store.js";
 import { normalizeGerenteCommand } from "./whatsapp-command.js";
+import { recordRuntimeHeartbeat, summarizeRuntime } from "../runtime/status.js";
 
 const PORT = Number(process.env.GERENTE_DASHBOARD_PORT || 8787);
 const HOST = process.env.GERENTE_DASHBOARD_HOST || "127.0.0.1";
@@ -29,6 +30,7 @@ function loadEnv(file = path.join(process.cwd(), ".env")) {
 }
 
 loadEnv();
+recordRuntimeHeartbeat({ component: "dashboard", environment: process.env.GERENTE_RUNTIME_ENV || "coolify", detail: "dashboard process started" });
 
 function readJsonFile(filePath) {
   try {
@@ -123,12 +125,39 @@ async function summary() {
       last_audio: whatsappConversations.find((item) => item.audio_detected) || null,
       last_deploy_hint: process.env.COOLIFY_RESOURCE_UUID || process.env.HOSTNAME || null,
     },
+    runtime: summarizeRuntime(),
     last_run: lastRun,
     ranking,
     notifications,
     whatsapp_conversations: whatsappConversations,
     outputs: latestOutputs(),
   };
+}
+
+async function runtimeHeartbeat(req, res) {
+  try {
+    const requestUrl = new URL(req.url, `http://${HOST}:${PORT}`);
+    const expectedToken = process.env.GERENTE_WEBHOOK_TOKEN;
+    if (expectedToken && requestUrl.searchParams.get("token") !== expectedToken) {
+      return json(res, { ok: false, error: "unauthorized" }, 401);
+    }
+    const raw = await readRequestBody(req);
+    const payload = raw ? JSON.parse(raw) : {};
+    const record = recordRuntimeHeartbeat({
+      component: payload.component || "external",
+      environment: payload.environment || "remote",
+      status: payload.status || "online",
+      detail: payload.detail || null,
+      source: payload.source || "http",
+      pid: payload.pid || null,
+      cwd: payload.cwd || null,
+      host: payload.host || null,
+      metadata: payload.metadata || {},
+    });
+    return json(res, { ok: true, runtime: record });
+  } catch (error) {
+    return json(res, { ok: false, error: error.message }, 400);
+  }
 }
 
 function json(res, body, status = 200) {
@@ -645,6 +674,13 @@ function page() {
 
           <article class="panel">
             <div class="panel-head">
+              <div><h2>Onde o Gerente Esta Rodando</h2><p>Heartbeat real por dashboard, MCP, VSCode e Antigrade.</p></div>
+            </div>
+            <div id="runtimeRows" class="timeline"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
               <div><h2>Ultima Execucao</h2><p>Executor, modelo e risco.</p></div>
             </div>
             <div id="lastRun"><p class="muted">Sem dados.</p></div>
@@ -707,6 +743,18 @@ function page() {
     function eventRow(title, detail, tone) {
       return "<div class='event'><span class='event-dot' style='" + (tone ? "background:" + tone + ";box-shadow:0 0 18px " + tone : "") + "'></span><div><strong>" + esc(title) + "</strong><span>" + esc(detail) + "</span></div></div>";
     }
+    function runtimeRow(item) {
+      const tone = item.online ? "var(--green)" : "var(--danger)";
+      const status = item.online ? "online" : "offline";
+      const detail = [
+        status,
+        item.environment,
+        item.detail,
+        item.age_seconds == null ? "" : "ultimo sinal ha " + item.age_seconds + "s",
+        item.cwd
+      ].filter(Boolean).join(" · ");
+      return eventRow((item.component || "gerente") + " / " + (item.host || "sem host"), detail, tone);
+    }
     async function loadData() {
       const res = await fetch("/api/summary");
       const data = await res.json();
@@ -723,6 +771,7 @@ function page() {
         ...(data.health.last_error ? ["<div class='health-item'>" + badge("ultimo erro", "danger") + "<strong>Alerta recente</strong><span>" + esc(data.health.last_error) + "</span></div>"] : []),
         ...data.health.providers.map(healthCard)
       ].join("");
+      document.getElementById("runtimeRows").innerHTML = (data.runtime || []).map(runtimeRow).join("") || "<p class='muted'>Sem heartbeat de runtime.</p>";
       document.getElementById("models").innerHTML = data.ranking.models.slice(0, 8).map((m) => row([
         "<code>" + esc(m.key) + "</code>",
         esc(m.avg_score),
@@ -753,6 +802,7 @@ function page() {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${HOST}:${PORT}`);
   if (url.pathname === "/api/whatsapp/inbound" && req.method === "POST") return void whatsappInbound(req, res);
+  if (url.pathname === "/api/runtime/heartbeat" && req.method === "POST") return void runtimeHeartbeat(req, res);
   if (url.pathname === "/api/summary") return void summary().then((body) => json(res, body)).catch((error) => json(res, { ok: false, error: error.message }, 500));
   if (url.pathname === "/health") return json(res, { ok: true, service: "gerente-dashboard" });
   if (url.pathname === "/") return html(res, page());

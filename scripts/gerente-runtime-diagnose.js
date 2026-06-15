@@ -4,6 +4,7 @@ import path from "path";
 import { readArenaRuns } from "../arena/store.js";
 import { readNotifications } from "../notifications/store.js";
 import { supabaseConversationConfigured, checkConversationStoreHealth } from "../dashboard/conversation-store.js";
+import { summarizeRuntime } from "../runtime/status.js";
 
 function loadEnv(file = path.join(process.cwd(), ".env")) {
   if (!fs.existsSync(file)) return;
@@ -45,6 +46,7 @@ async function productionSummary(url) {
       usage: data.usage || null,
       conversation_source: data.health?.conversation_source || null,
       conversation_store: data.health?.conversation_store || null,
+      runtime: data.runtime || [],
     };
   } catch (error) {
     return { ok: false, error: error.message };
@@ -82,6 +84,7 @@ const report = {
     arena_runs_readable: readArenaRuns().length,
     notifications_readable: readNotifications().length,
     outputs,
+    runtime: summarizeRuntime(),
   },
   supabase: await checkConversationStoreHealth(process.env),
   production: await productionSummary(process.env.GERENTE_PUBLIC_BASE || "https://gerente.soberano.pro"),

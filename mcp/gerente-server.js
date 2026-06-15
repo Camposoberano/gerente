@@ -7,6 +7,7 @@ import { buildArenaRanking } from "../arena/store.js";
 import { sendWhatsAppGoMessage } from "../notifications/whatsapp-go.js";
 import { recordNotification } from "../notifications/store.js";
 import { handleGerenteCommand } from "../gerente/command.js";
+import { recordRuntimeHeartbeat, sendRemoteHeartbeat } from "../runtime/status.js";
 
 const ROOT = process.cwd();
 const PROTOCOL_VERSION = "2024-11-05";
@@ -25,6 +26,8 @@ function loadEnv(file = path.join(ROOT, ".env")) {
 }
 
 loadEnv();
+recordRuntimeHeartbeat({ component: "mcp", environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "mcp-local", detail: "mcp process started" });
+void sendRemoteHeartbeat({ component: "mcp", detail: "mcp process started", metadata: { protocol: PROTOCOL_VERSION } });
 
 function jsonText(value) {
   return {
@@ -199,6 +202,14 @@ const tools = [
 ];
 
 async function callTool(name, args = {}) {
+  recordRuntimeHeartbeat({
+    component: "mcp",
+    environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "mcp-local",
+    detail: `tool:${name}`,
+    metadata: { tool: name },
+  });
+  void sendRemoteHeartbeat({ component: "mcp", detail: `tool:${name}`, metadata: { tool: name } });
+
   if (name === "router.plan") {
     return jsonText(createExecutionPlan({
       task: args.task,

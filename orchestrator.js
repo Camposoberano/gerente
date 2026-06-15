@@ -13,6 +13,10 @@ import { getServidoresDoAgente, listarServidores } from "./mcp/servers.js";
 import { createExecutionPlan } from "./router/v2.js";
 import { recordArenaRun, buildArenaRanking } from "./arena/store.js";
 import { notifyExecutionComplete } from "./notifications/index.js";
+import { recordRuntimeHeartbeat, sendRemoteHeartbeat } from "./runtime/status.js";
+
+recordRuntimeHeartbeat({ component: "orchestrator", environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "local", detail: "orchestrator process started" });
+void sendRemoteHeartbeat({ component: "orchestrator", detail: "orchestrator process started" });
 
 // --- EXTRAIR JSON ROBUSTO PARA EVITAR CRASH DE FORMATO ---
 function extrairJSONRobusto(texto) {
@@ -1194,6 +1198,29 @@ Execute sua parte da tarefa de forma completa e profissional usando suas ferrame
 
   // 5. Salvar output
   salvarOutput(tarefaEfetiva, resultados, executionPlan);
+  recordRuntimeHeartbeat({
+    component: "orchestrator",
+    environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "local",
+    detail: `execution:${executionPlan.task_id}`,
+    metadata: {
+      task_id: executionPlan.task_id,
+      area: executionPlan.task_brief.area,
+      risk: executionPlan.task_brief.risk,
+      primary_agent: executionPlan.primary.agent_id,
+      preferred_model: executionPlan.model_policy.preferred_model,
+    },
+  });
+  void sendRemoteHeartbeat({
+    component: "orchestrator",
+    detail: `execution:${executionPlan.task_id}`,
+    metadata: {
+      task_id: executionPlan.task_id,
+      area: executionPlan.task_brief.area,
+      risk: executionPlan.task_brief.risk,
+      primary_agent: executionPlan.primary.agent_id,
+      preferred_model: executionPlan.model_policy.preferred_model,
+    },
+  });
 
   return resultados;
 }
