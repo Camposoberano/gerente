@@ -30,7 +30,16 @@ function loadEnv(file = path.join(process.cwd(), ".env")) {
 }
 
 loadEnv();
-recordRuntimeHeartbeat({ component: "dashboard", environment: process.env.GERENTE_RUNTIME_ENV || "coolify", detail: "dashboard process started" });
+function dashboardHeartbeat(detail = "dashboard alive") {
+  return recordRuntimeHeartbeat({
+    component: "dashboard",
+    environment: process.env.GERENTE_RUNTIME_ENV || "coolify",
+    detail,
+  });
+}
+
+dashboardHeartbeat("dashboard process started");
+setInterval(() => dashboardHeartbeat(), 45_000).unref();
 
 function readJsonFile(filePath) {
   try {
@@ -91,6 +100,7 @@ function usageTotals(conversations) {
 }
 
 async function summary() {
+  dashboardHeartbeat("summary requested");
   const arenaRuns = readArenaRuns();
   const ranking = buildArenaRanking();
   const allNotifications = readNotifications();
@@ -804,7 +814,10 @@ const server = http.createServer((req, res) => {
   if (url.pathname === "/api/whatsapp/inbound" && req.method === "POST") return void whatsappInbound(req, res);
   if (url.pathname === "/api/runtime/heartbeat" && req.method === "POST") return void runtimeHeartbeat(req, res);
   if (url.pathname === "/api/summary") return void summary().then((body) => json(res, body)).catch((error) => json(res, { ok: false, error: error.message }, 500));
-  if (url.pathname === "/health") return json(res, { ok: true, service: "gerente-dashboard" });
+  if (url.pathname === "/health") {
+    dashboardHeartbeat("health requested");
+    return json(res, { ok: true, service: "gerente-dashboard" });
+  }
   if (url.pathname === "/") return html(res, page());
   return json(res, { error: "not found" }, 404);
 });

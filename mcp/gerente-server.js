@@ -26,8 +26,18 @@ function loadEnv(file = path.join(ROOT, ".env")) {
 }
 
 loadEnv();
-recordRuntimeHeartbeat({ component: "mcp", environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "mcp-local", detail: "mcp process started" });
-void sendRemoteHeartbeat({ component: "mcp", detail: "mcp process started", metadata: { protocol: PROTOCOL_VERSION } });
+function mcpHeartbeat(detail = "mcp alive", metadata = {}) {
+  recordRuntimeHeartbeat({
+    component: "mcp",
+    environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "mcp-local",
+    detail,
+    metadata,
+  });
+  void sendRemoteHeartbeat({ component: "mcp", detail, metadata: { protocol: PROTOCOL_VERSION, ...metadata } });
+}
+
+mcpHeartbeat("mcp process started");
+setInterval(() => mcpHeartbeat(), 45_000).unref();
 
 function jsonText(value) {
   return {
@@ -202,13 +212,7 @@ const tools = [
 ];
 
 async function callTool(name, args = {}) {
-  recordRuntimeHeartbeat({
-    component: "mcp",
-    environment: process.env.GERENTE_RUNTIME_ENV || process.env.GERENTE_CLIENT_NAME || "mcp-local",
-    detail: `tool:${name}`,
-    metadata: { tool: name },
-  });
-  void sendRemoteHeartbeat({ component: "mcp", detail: `tool:${name}`, metadata: { tool: name } });
+  mcpHeartbeat(`tool:${name}`, { tool: name });
 
   if (name === "router.plan") {
     return jsonText(createExecutionPlan({
