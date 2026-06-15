@@ -409,86 +409,252 @@ function page() {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Gerente Dashboard</title>
   <style>
-    :root { --bg:#f5f7fa; --card:#fff; --ink:#17202a; --muted:#667085; --line:#d8dee6; --accent:#0f766e; --warn:#92400e; --danger:#991b1b; }
+    :root {
+      --bg:#060911;
+      --bg2:#0a1020;
+      --panel:#0f1728;
+      --panel2:#111d31;
+      --line:#243149;
+      --line2:#1b263a;
+      --ink:#f7fbff;
+      --muted:#94a3b8;
+      --faint:#64748b;
+      --cyan:#22d3ee;
+      --green:#34d399;
+      --magenta:#f472b6;
+      --amber:#f59e0b;
+      --danger:#fb7185;
+      --shadow:0 28px 90px rgba(0,0,0,.38);
+    }
     * { box-sizing:border-box; }
-    body { margin:0; background:var(--bg); color:var(--ink); font-family:Arial, Helvetica, sans-serif; }
-    main { max-width:1180px; margin:0 auto; padding:28px 18px 46px; }
-    header { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; margin-bottom:20px; border-bottom:1px solid var(--line); padding-bottom:18px; }
-    h1 { margin:0 0 6px; font-size:30px; letter-spacing:0; }
-    h2 { margin:0 0 12px; font-size:18px; letter-spacing:0; }
-    p { margin:0; color:var(--muted); }
-    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:9px 13px; border-radius:7px; cursor:pointer; font-weight:700; }
-    .grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px; }
-    .wide { grid-column:span 2; }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:16px; min-width:0; }
-    .stat { font-size:28px; font-weight:700; margin-top:4px; }
-    .muted { color:var(--muted); font-size:13px; }
-    table { width:100%; border-collapse:collapse; font-size:13px; }
-    th, td { border-bottom:1px solid var(--line); padding:9px 6px; text-align:left; vertical-align:top; }
-    th { color:var(--muted); font-weight:700; }
-    code { background:#eef2f6; padding:2px 5px; border-radius:5px; }
-    .pill { display:inline-block; padding:3px 8px; border-radius:999px; background:#e6f4f1; color:var(--accent); font-weight:700; font-size:12px; }
-    .warn { background:#fff7ed; color:var(--warn); }
-    .danger { background:#fee2e2; color:var(--danger); }
-    .conversation { border-top:1px solid var(--line); padding:12px 0; }
-    .conversation:first-child { border-top:0; padding-top:0; }
-    .conversation-head { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+    html { background:var(--bg); }
+    body {
+      margin:0;
+      min-height:100vh;
+      color:var(--ink);
+      background:
+        radial-gradient(760px 520px at 75% -20%, rgba(34,211,238,.16), transparent 60%),
+        radial-gradient(780px 520px at 10% 0%, rgba(244,114,182,.12), transparent 58%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing:antialiased;
+    }
+    button { font:inherit; border:0; cursor:pointer; }
+    .app { min-height:100vh; display:grid; grid-template-columns:82px minmax(0, 1fr); }
+    .rail {
+      position:sticky; top:0; height:100vh; padding:18px 12px;
+      border-right:1px solid rgba(148,163,184,.14);
+      background:rgba(4,7,14,.72); backdrop-filter:blur(16px);
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+    }
+    .mark {
+      width:46px; height:46px; border-radius:12px; display:grid; place-items:center;
+      background:linear-gradient(135deg, var(--cyan), var(--magenta));
+      color:#041019; font-weight:950; box-shadow:0 18px 40px rgba(34,211,238,.18);
+    }
+    .navdot {
+      width:46px; height:42px; border:1px solid transparent; border-radius:10px;
+      display:grid; place-items:center; color:var(--muted); background:transparent;
+    }
+    .navdot.active { color:var(--cyan); border-color:rgba(34,211,238,.28); background:rgba(34,211,238,.08); }
+    main { min-width:0; max-width:1500px; width:100%; margin:0 auto; padding:24px; }
+    .topbar {
+      min-height:76px; display:flex; align-items:center; justify-content:space-between; gap:18px;
+      border:1px solid rgba(148,163,184,.14); border-radius:14px; padding:16px 18px;
+      background:linear-gradient(135deg, rgba(15,23,42,.78), rgba(15,23,42,.42));
+      box-shadow:var(--shadow);
+    }
+    .title h1 { margin:0; font-size:30px; line-height:1; letter-spacing:-.03em; }
+    .title p { margin:8px 0 0; color:var(--muted); font-size:13px; }
+    .actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .btn {
+      min-height:38px; padding:0 14px; border-radius:8px; color:var(--ink); font-weight:800;
+      background:rgba(255,255,255,.05); border:1px solid rgba(148,163,184,.18);
+    }
+    .btn.primary { color:#031014; background:linear-gradient(135deg, var(--cyan), var(--green)); border:0; }
+    .status {
+      display:inline-flex; align-items:center; gap:8px; min-height:34px; padding:0 12px;
+      border:1px solid rgba(52,211,153,.28); border-radius:999px; color:#bbf7d0;
+      background:rgba(52,211,153,.08); font-size:12px; font-weight:800;
+    }
+    .pulse { width:8px; height:8px; border-radius:999px; background:var(--green); box-shadow:0 0 18px var(--green); }
+    .kpis { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:14px; margin:16px 0; }
+    .kpi, .panel {
+      min-width:0; border:1px solid rgba(148,163,184,.14); border-radius:14px;
+      background:linear-gradient(180deg, rgba(17,29,49,.86), rgba(9,14,26,.86));
+      box-shadow:0 18px 60px rgba(0,0,0,.22);
+    }
+    .kpi { padding:16px; position:relative; overflow:hidden; }
+    .kpi:after { content:""; position:absolute; inset:auto 14px 0; height:2px; background:linear-gradient(90deg, var(--cyan), var(--magenta)); opacity:.6; }
+    .kpi .label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; font-weight:900; }
+    .kpi .value { margin-top:9px; font-size:34px; line-height:1; font-weight:950; letter-spacing:-.04em; }
+    .kpi .sub { margin-top:8px; color:var(--faint); font-size:12px; }
+    .layout { display:grid; grid-template-columns:minmax(0, 1.45fr) minmax(340px, .8fr); gap:14px; align-items:start; }
+    .panel { padding:16px; }
+    .panel + .panel { margin-top:14px; }
+    .panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; }
+    .panel h2 { margin:0; font-size:17px; letter-spacing:-.02em; }
+    .panel p { margin:5px 0 0; color:var(--muted); font-size:12px; }
+    .chip, .pill {
+      display:inline-flex; align-items:center; gap:6px; min-height:25px; padding:0 9px;
+      border-radius:999px; font-size:11px; font-weight:900; color:var(--cyan);
+      background:rgba(34,211,238,.09); border:1px solid rgba(34,211,238,.22);
+      white-space:nowrap;
+    }
+    .warn { color:#fcd34d; border-color:rgba(245,158,11,.24); background:rgba(245,158,11,.10); }
+    .danger { color:#fecdd3; border-color:rgba(251,113,133,.28); background:rgba(251,113,133,.10); }
+    .ok { color:#bbf7d0; border-color:rgba(52,211,153,.26); background:rgba(52,211,153,.10); }
+    .conversation-list { display:grid; gap:10px; }
+    .conversation {
+      border:1px solid rgba(148,163,184,.13); border-radius:12px; padding:12px;
+      background:rgba(2,6,23,.34);
+    }
+    .conversation-head { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:10px; }
     .conversation-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .box { background:#f8fafc; border:1px solid var(--line); border-radius:7px; padding:10px; min-width:0; }
-    .box strong { display:block; font-size:12px; color:var(--muted); margin-bottom:5px; }
-    .box div { overflow-wrap:anywhere; white-space:pre-wrap; font-size:13px; }
-    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#111827; color:#f8fafc; border-radius:8px; padding:12px; font-size:12px; max-height:260px; overflow:auto; }
-    @media (max-width:900px) { .grid { grid-template-columns:1fr; } .wide { grid-column:auto; } header { display:block; } button { margin-top:12px; } .conversation-grid { grid-template-columns:1fr; } }
+    .box {
+      min-width:0; border:1px solid rgba(148,163,184,.10); border-radius:9px;
+      padding:10px; background:rgba(15,23,42,.62);
+    }
+    .box strong { display:block; color:var(--muted); font-size:10px; letter-spacing:.07em; text-transform:uppercase; margin-bottom:6px; }
+    .box div { color:#e5eefb; overflow-wrap:anywhere; white-space:pre-wrap; font-size:12px; line-height:1.45; }
+    .health-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:9px; }
+    .health-item {
+      border:1px solid rgba(148,163,184,.12); border-radius:10px; padding:10px;
+      background:rgba(2,6,23,.24);
+    }
+    .health-item strong { display:block; margin-top:7px; font-size:13px; }
+    .health-item span { display:block; margin-top:4px; color:var(--muted); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th { color:var(--faint); font-size:10px; letter-spacing:.08em; text-transform:uppercase; text-align:left; padding:10px 8px; border-bottom:1px solid rgba(148,163,184,.14); }
+    td { padding:10px 8px; border-bottom:1px solid rgba(148,163,184,.08); color:#dce7f7; vertical-align:top; }
+    tr:last-child td { border-bottom:0; }
+    code { display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; vertical-align:bottom; color:#cffafe; background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.12); border-radius:6px; padding:2px 6px; }
+    .timeline { display:grid; gap:9px; }
+    .event {
+      display:grid; grid-template-columns:10px minmax(0, 1fr); gap:10px; align-items:start;
+      border-bottom:1px solid rgba(148,163,184,.08); padding-bottom:9px;
+    }
+    .event:last-child { border-bottom:0; padding-bottom:0; }
+    .event-dot { width:8px; height:8px; margin-top:5px; border-radius:999px; background:var(--cyan); box-shadow:0 0 18px var(--cyan); }
+    .event strong { display:block; font-size:13px; }
+    .event span { display:block; margin-top:4px; color:var(--muted); font-size:11px; }
+    pre {
+      white-space:pre-wrap; overflow-wrap:anywhere; margin:0; max-height:260px; overflow:auto;
+      background:#020617; color:#cbd5e1; border:1px solid rgba(148,163,184,.12); border-radius:10px; padding:12px; font-size:11px; line-height:1.5;
+    }
+    .models-wrap { overflow:auto; }
+    .mini-chart { display:flex; align-items:flex-end; gap:4px; height:54px; margin-top:12px; }
+    .mini-chart span { flex:1; min-width:4px; border-radius:5px 5px 0 0; background:linear-gradient(180deg, var(--cyan), var(--magenta)); opacity:.88; }
+    @media (max-width:1100px) {
+      .app { grid-template-columns:1fr; }
+      .rail { display:none; }
+      .layout { grid-template-columns:1fr; }
+      .kpis { grid-template-columns:repeat(2, minmax(0, 1fr)); }
+      main { padding:16px; }
+    }
+    @media (max-width:680px) {
+      .topbar { display:block; }
+      .actions { justify-content:flex-start; margin-top:14px; }
+      .kpis { grid-template-columns:1fr; }
+      .conversation-grid, .health-grid { grid-template-columns:1fr; }
+      .title h1 { font-size:25px; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <div>
-        <h1>Gerente Dashboard</h1>
-        <p>Arena, execucoes, notificacoes e proximo canal WhatsApp.</p>
-      </div>
-      <button onclick="loadData()">Atualizar</button>
-    </header>
-    <section class="grid">
-      <div class="card"><h2>Runs Arena</h2><div class="stat" id="runs">0</div><p class="muted">execucoes pontuadas</p></div>
-      <div class="card"><h2>Notificacoes</h2><div class="stat" id="notifications">0</div><p class="muted">eventos registrados</p></div>
-      <div class="card"><h2>Outputs</h2><div class="stat" id="outputs">0</div><p class="muted">arquivos salvos</p></div>
-      <div class="card wide">
-        <h2>Conversas WhatsApp</h2>
-        <div id="whatsappRows"><p class="muted">Sem conversas.</p></div>
-      </div>
-      <div class="card">
-        <h2>Status WhatsApp</h2>
-        <div class="stat" id="whatsappCount">0</div>
-        <p class="muted">conversas processadas</p>
-      </div>
-      <div class="card wide">
-        <h2>Saude Do Gerente</h2>
-        <div id="healthRows"><p class="muted">Carregando.</p></div>
-      </div>
-      <div class="card wide">
-        <h2>Ranking De Modelos</h2>
-        <table><thead><tr><th>Modelo</th><th>Score</th><th>Runs</th><th>Fallback</th></tr></thead><tbody id="models"></tbody></table>
-      </div>
-      <div class="card">
-        <h2>Ultima Execucao</h2>
-        <div id="lastRun" class="muted">Sem dados.</div>
-      </div>
-      <div class="card wide">
-        <h2>Ultimos Outputs</h2>
-        <table><thead><tr><th>Arquivo</th><th>Area</th><th>Risco</th><th>Tarefa</th></tr></thead><tbody id="outputRows"></tbody></table>
-      </div>
-      <div class="card">
-        <h2>Notificacoes Recentes</h2>
-        <div id="notifRows"></div>
-      </div>
-      <div class="card wide">
-        <h2>JSON Do Resumo</h2>
-        <pre id="raw">{}</pre>
-      </div>
-    </section>
-  </main>
+  <div class="app">
+    <aside class="rail" aria-label="Navegacao">
+      <div class="mark">G</div>
+      <div class="navdot active">⌁</div>
+      <div class="navdot">◍</div>
+      <div class="navdot">▤</div>
+      <div class="navdot">◎</div>
+      <div style="flex:1"></div>
+      <div class="navdot">↻</div>
+    </aside>
+    <main>
+      <section class="topbar">
+        <div class="title">
+          <h1>Gerente IA</h1>
+          <p>Central de comando para WhatsApp, agentes, modelos e execucoes.</p>
+        </div>
+        <div class="actions">
+          <span class="status"><span class="pulse"></span>Operacao online</span>
+          <button class="btn" onclick="loadData()">Atualizar</button>
+          <button class="btn primary" onclick="location.href='/api/summary'">Ver API</button>
+        </div>
+      </section>
+
+      <section class="kpis">
+        <div class="kpi"><div class="label">Conversas WhatsApp</div><div class="value" id="whatsappCount">0</div><div class="sub" id="conversationSource">historico local</div></div>
+        <div class="kpi"><div class="label">Runs Arena</div><div class="value" id="runs">0</div><div class="sub">modelos pontuados</div></div>
+        <div class="kpi"><div class="label">Outputs</div><div class="value" id="outputs">0</div><div class="sub">artefatos gerados</div></div>
+        <div class="kpi"><div class="label">Provedores OK</div><div class="value" id="providersOk">0</div><div class="sub">tokens e servicos</div></div>
+      </section>
+
+      <section class="layout">
+        <div>
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>Conversas WhatsApp</h2><p>Entrada original, comando entendido, resposta e agente usado.</p></div>
+              <span class="chip" id="conversationChip">ao vivo</span>
+            </div>
+            <div id="whatsappRows" class="conversation-list"><p class="muted">Sem conversas.</p></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>Ranking de Modelos</h2><p>Arena operacional por score, runs e fallback.</p></div>
+            </div>
+            <div class="models-wrap">
+              <table><thead><tr><th>Modelo</th><th>Score</th><th>Runs</th><th>Fallback</th></tr></thead><tbody id="models"></tbody></table>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>JSON do Resumo</h2><p>Snapshot bruto para auditoria rapida.</p></div>
+            </div>
+            <pre id="raw">{}</pre>
+          </article>
+        </div>
+
+        <aside>
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>Saude do Gerente</h2><p>WhatsApp, Supabase e LLMs.</p></div>
+            </div>
+            <div id="healthRows" class="health-grid"><p class="muted">Carregando.</p></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>Ultima Execucao</h2><p>Executor, modelo e risco.</p></div>
+            </div>
+            <div id="lastRun"><p class="muted">Sem dados.</p></div>
+            <div class="mini-chart" aria-hidden>
+              <span style="height:28%"></span><span style="height:48%"></span><span style="height:38%"></span><span style="height:64%"></span><span style="height:52%"></span><span style="height:76%"></span><span style="height:61%"></span><span style="height:86%"></span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>Outputs Recentes</h2><p>Arquivos e planos salvos.</p></div>
+            </div>
+            <div id="outputRows" class="timeline"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <div><h2>Notificacoes</h2><p>Eventos do sistema.</p></div>
+              <span class="chip" id="notifications">0</span>
+            </div>
+            <div id="notifRows" class="timeline"></div>
+          </article>
+        </aside>
+      </section>
+    </main>
+  </div>
   <script>
     function text(value) { return value == null ? "" : String(value); }
     function esc(value) {
@@ -502,7 +668,7 @@ function page() {
       const error = item.transcription_error ? "<p>" + badge("erro transcricao", "danger") + " <span class='muted'>" + esc(item.transcription_error) + "</span></p>" : "";
       return [
         "<div class='conversation'>",
-        "<div class='conversation-head'>" + kind + audio + "<span class='muted'>" + esc(item.created_at) + "</span></div>",
+        "<div class='conversation-head'><div>" + kind + audio + "</div><span class='chip'>" + esc(item.created_at) + "</span></div>",
         "<div class='conversation-grid'>",
         "<div class='box'><strong>Entrada original</strong><div>" + esc(item.original_message) + "</div></div>",
         "<div class='box'><strong>Comando entendido</strong><div>" + esc(item.normalized_message) + "</div></div>",
@@ -516,7 +682,10 @@ function page() {
       ].join("");
     }
     function healthCard(item) {
-      return "<p>" + badge(item.ok ? "ok" : (item.configured ? "erro" : "ausente"), item.ok ? "" : "danger") + " <strong>" + esc(item.label || item.id || "item") + "</strong><br><span class='muted'>" + esc(item.detail || "") + "</span></p>";
+      return "<div class='health-item'>" + badge(item.ok ? "ok" : (item.configured ? "erro" : "ausente"), item.ok ? "ok" : "danger") + "<strong>" + esc(item.label || item.id || "item") + "</strong><span>" + esc(item.detail || "") + "</span></div>";
+    }
+    function eventRow(title, detail, tone) {
+      return "<div class='event'><span class='event-dot' style='" + (tone ? "background:" + tone + ";box-shadow:0 0 18px " + tone : "") + "'></span><div><strong>" + esc(title) + "</strong><span>" + esc(detail) + "</span></div></div>";
     }
     async function loadData() {
       const res = await fetch("/api/summary");
@@ -525,10 +694,12 @@ function page() {
       document.getElementById("notifications").textContent = data.totals.notifications;
       document.getElementById("outputs").textContent = data.totals.outputs;
       document.getElementById("whatsappCount").textContent = data.totals.whatsapp_conversations;
+      document.getElementById("conversationSource").textContent = "historico: " + text(data.health.conversation_source);
+      document.getElementById("conversationChip").textContent = text(data.health.conversation_source);
+      document.getElementById("providersOk").textContent = data.health.providers.filter((p) => p.ok).length;
       document.getElementById("whatsappRows").innerHTML = data.whatsapp_conversations.slice(0, 6).map(conversationCard).join("") || "<p class='muted'>Sem conversas.</p>";
       document.getElementById("healthRows").innerHTML = [
-        "<p>" + badge("historico: " + text(data.health.conversation_source), data.health.conversation_error ? "danger" : "") + "</p>",
-        ...(data.health.last_error ? ["<p>" + badge("ultimo erro", "danger") + " <span class='muted'>" + esc(data.health.last_error) + "</span></p>"] : []),
+        ...(data.health.last_error ? ["<div class='health-item'>" + badge("ultimo erro", "danger") + "<strong>Alerta recente</strong><span>" + esc(data.health.last_error) + "</span></div>"] : []),
         ...data.health.providers.map(healthCard)
       ].join("");
       document.getElementById("models").innerHTML = data.ranking.models.slice(0, 8).map((m) => row([
@@ -538,19 +709,16 @@ function page() {
         esc(m.fallback_rate)
       ])).join("") || row(["Sem dados", "", "", ""]);
       document.getElementById("lastRun").innerHTML = data.last_run ? [
-        "<p>" + badge(data.last_run.area) + " " + badge(data.last_run.risk, "warn") + "</p>",
-        "<p>Modelo: <code>" + esc(data.last_run.preferred_model) + "</code></p>",
-        "<p>Agente: <code>" + esc(data.last_run.primary_agent) + "</code></p>",
-        "<p>Score: " + esc(data.last_run.metrics && data.last_run.metrics.score) + "</p>"
+        "<div class='conversation-grid'>",
+        "<div class='box'><strong>Area / risco</strong><div>" + badge(data.last_run.area) + " " + badge(data.last_run.risk, "warn") + "</div></div>",
+        "<div class='box'><strong>Modelo</strong><div><code>" + esc(data.last_run.preferred_model) + "</code></div></div>",
+        "<div class='box'><strong>Agente</strong><div><code>" + esc(data.last_run.primary_agent) + "</code></div></div>",
+        "<div class='box'><strong>Score</strong><div>" + esc(data.last_run.metrics && data.last_run.metrics.score) + "</div></div>",
+        "</div>"
       ].join("") : "Sem dados.";
-      document.getElementById("outputRows").innerHTML = data.outputs.map((o) => row([
-        "<code>" + esc(o.name) + "</code>",
-        esc(o.area),
-        esc(o.risk),
-        esc(text(o.tarefa).slice(0, 120))
-      ])).join("") || row(["Sem dados", "", "", ""]);
+      document.getElementById("outputRows").innerHTML = data.outputs.slice(0, 6).map((o) => eventRow(o.name, [o.area, o.risk, text(o.tarefa).slice(0, 80)].filter(Boolean).join(" · "), "var(--magenta)")).join("") || "<p class='muted'>Sem outputs.</p>";
       document.getElementById("notifRows").innerHTML = data.notifications.slice(0, 8).map((n) => (
-        "<p>" + badge(n.channel) + " " + esc(n.title) + "<br><span class='muted'>" + esc(n.created_at) + "</span></p>"
+        eventRow(n.title || n.type, [n.channel, n.created_at].filter(Boolean).join(" · "), "var(--cyan)")
       )).join("") || "<p class='muted'>Sem notificacoes.</p>";
       document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
     }
